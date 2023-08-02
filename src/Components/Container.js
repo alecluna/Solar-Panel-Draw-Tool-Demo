@@ -25,6 +25,8 @@ import axios from "axios";
 import "../Styles/animation.css";
 import ReactGA from "react-ga";
 import Joyride, { STATUS } from "react-joyride";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import ErrorDialog from "./Stateless/ErrorDialog";
 require("dotenv").config();
 
 const styles = theme => ({
@@ -78,7 +80,8 @@ class Container extends React.Component {
       name: "",
       animateHamburger: true,
       address: "",
-      error: false,
+      errorDialogOpen: false,
+      isLoading: false,
       steps: [
         {
           content: (
@@ -259,10 +262,11 @@ class Container extends React.Component {
       });
   };
 
-  calculateSystemSize = () => {
+  calculateSystemSize = async () => {
     const { squareFootage, averagePowerBill } = this.state;
 
     this.handleClose();
+    this.setState({ isLoading: true });
     let url =
       "https://kdqi0skbo3.execute-api.us-east-1.amazonaws.com/default/calculateSystemSize";
     axios
@@ -286,6 +290,8 @@ class Container extends React.Component {
         });
       })
       .catch(error => console.log(error));
+
+    this.setState({ isLoading: false });
   };
 
   sendLocation = location => {
@@ -307,6 +313,7 @@ class Container extends React.Component {
       })
       .catch(error => {
         console.log("error: ", error);
+        this.setState({ errorDialogOpen: true });
       });
   };
 
@@ -330,10 +337,27 @@ class Container extends React.Component {
       animateHamburger,
       run,
       steps,
+      isLoading,
+      errorDialogOpen,
     } = this.state;
     const center = { lat, lng };
     let key = process.env.REACT_APP_GOOGLE_API_KEY;
     let animateHamMenuClass = animateHamburger ? "menu-icon" : null;
+
+    if (errorDialogOpen) {
+      return (
+        <ErrorDialog
+          open={errorDialogOpen}
+          onClose={() => this.setState({ errorDialogOpen: !errorDialogOpen })}
+          title="Error with request"
+          message="Whoops, something went wrong with your request, please try again"
+        />
+      );
+    }
+
+    if (isLoading) {
+      return <CircularProgress />;
+    }
 
     const drawer = (
       <div style={{ width: 275 }}>
