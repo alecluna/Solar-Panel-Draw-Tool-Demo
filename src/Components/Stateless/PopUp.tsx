@@ -1,30 +1,23 @@
-import React from "react";
 import {
   Dialog,
   DialogContent,
   DialogActions,
   Button,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import form from "../../Styles/form";
-import { withFormik, Form, Field } from "formik";
+import { withFormik, Field } from "formik";
 import * as yup from "yup";
 import CountUp from "react-countup";
 import "../../Styles/animation.css";
 
 const styles = {
   fontStyles: {
-    fontWeight: "300"
-  }
+    fontWeight: "300",
+  },
 };
-const PopUp = ({
-  open,
-  handleClose,
-  errors,
-  touched,
-  squareFootage,
-  togglePrivacyPolicy
-}) => {
+
+const PopUp = ({ open, handleClose, errors, touched, squareFootage }) => {
   return (
     <div>
       <Dialog
@@ -32,7 +25,6 @@ const PopUp = ({
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         disableEscapeKeyDown={true}
-        disableBackdropClick={true}
         fullWidth={true}
         className="animate"
       >
@@ -41,7 +33,7 @@ const PopUp = ({
             style={{
               paddingTop: "25px",
               paddingLeft: "25px",
-              paddingRight: "25px"
+              paddingRight: "25px",
             }}
           >
             <Typography align="center" variant="h4" style={styles.fontStyles}>
@@ -71,10 +63,10 @@ const PopUp = ({
               display: "flex",
               flexDirection: "column",
               flexWrap: "wrap",
-              justifyContent: "center"
+              justifyContent: "center",
             }}
           >
-            <Form>
+            <form>
               <Field
                 style={form.textArea}
                 placeholder="Name (optional)"
@@ -100,7 +92,7 @@ const PopUp = ({
                   display: "flex",
                   flexDirection: "row",
                   flexWrap: "no-wrap",
-                  padding: "5px"
+                  padding: "5px",
                 }}
               >
                 {" "}
@@ -112,7 +104,7 @@ const PopUp = ({
                   style={{
                     width: "100%",
                     display: "flex",
-                    justifyContent: "center"
+                    justifyContent: "center",
                   }}
                 >
                   {" "}
@@ -121,14 +113,15 @@ const PopUp = ({
                     the terms of eFlow Solar Energy’s{" "}
                     <Button variant="text" align="left" padding="0">
                       <Typography
-                        onClick={togglePrivacyPolicy}
                         color="textSecondary"
                         style={{
                           textDecoration: "underline",
-                          fontSize: "12px"
+                          fontSize: "12px",
                         }}
                       >
-                        Disclosure, Notice and Privacy Policy:
+                        Disclosure: This is just a demo version of the product I
+                        built for a client! I'm not storing any info and keeping
+                        any data, just wanted to show off this cool tool :D{" "}
                       </Typography>
                     </Button>
                   </Typography>
@@ -142,14 +135,14 @@ const PopUp = ({
                 style={{
                   display: "flex",
                   justifyContent: "center",
-                  width: "100%"
+                  width: "100%",
                 }}
               >
                 <Button type="submit" align="center" style={form.buttonStyles}>
                   Calculate My Savings
                 </Button>
               </div>
-            </Form>
+            </form>
           </div>
         </DialogContent>
         <DialogActions>
@@ -162,7 +155,8 @@ const PopUp = ({
   );
 };
 
-const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+const phoneRegExp =
+  /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
 const PopUpValidator = withFormik({
   mapPropsToValues({ email, name, phoneNumber, agree }) {
@@ -170,7 +164,7 @@ const PopUpValidator = withFormik({
       name: name || "",
       phoneNumber: phoneNumber || "",
       email: email || "",
-      agree: agree || false
+      agree: agree || false,
     };
   },
   validationSchema: yup.object().shape({
@@ -184,17 +178,17 @@ const PopUpValidator = withFormik({
       .email("must be an email address")
       .required("an email address is required")
       .typeError("you must specify an email"),
-    agree: yup.bool().oneOf([true], "Checkbox must be checked")
+    agree: yup.bool().oneOf([true], "Checkbox must be checked"),
   }),
   handleSubmit(values, { props }) {
-    let buildEmail = `${values.email}`;
-    let phoneNumber = values.phoneNumber;
-    let name = values.name;
+    const buildEmail = `${values.email}`;
+    const phoneNumber = values.phoneNumber;
+    const name = values.name;
 
     props.toggleEmailProvided(phoneNumber, name, buildEmail);
     props.calculateSystemSize();
     props.toggleOpenLoanInfo();
-  }
+  },
 })(PopUp);
 
 export default PopUpValidator;

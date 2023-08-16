@@ -3,7 +3,6 @@
  * Passing props down from "LoanInfo.js" parent component
  */
 
-import React from "react";
 import { Pie, Line } from "react-chartjs-2";
 
 const optionsCircle = {
@@ -12,13 +11,13 @@ const optionsCircle = {
   legend: {
     position: "top",
     labels: {
-      boxWidth: 10
-    }
+      boxWidth: 10,
+    },
   },
   title: {
     display: true,
-    text: "Electric Usage Offset"
-  }
+    text: "Electric Usage Offset",
+  },
 };
 
 const optionsLine = {
@@ -31,13 +30,13 @@ const optionsLine = {
           display: true,
           labelString: "Given annual increase of 5.5% to avg. utility bill",
           fontColor: "#787878",
-          fontSize: 9
+          fontSize: 9,
         },
         ticks: {
           maxRotation: 90,
-          minRotation: 90
-        }
-      }
+          minRotation: 90,
+        },
+      },
     ],
     yAxes: [
       {
@@ -45,32 +44,32 @@ const optionsLine = {
           max: 1000,
           min: 0,
           stepSize: 100,
-          callback: value => {
+          callback: (value) => {
             return "$" + value;
-          }
-        }
-      }
-    ]
+          },
+        },
+      },
+    ],
   },
   tooltips: {
     enabled: true,
     mode: "single",
     callbacks: {
-      label: tooltipItems => {
+      label: (tooltipItems) => {
         return "$" + Math.round(tooltipItems.yLabel);
-      }
-    }
+      },
+    },
   },
   title: {
     display: true,
-    text: "Avg. Monthly Bill w/out Solar vs. Monthly Loan Payment "
-  }
+    text: "Avg. Monthly Bill w/out Solar vs. Monthly Loan Payment ",
+  },
 };
 
 //this function is hacky, using toFixed() to persist a 2 decimal value for each iteration
 const calculateYearlyBill = (averagePowerBill, saved) => {
-  let anualUtilBill = [];
-  let totalYearsSolar = 20;
+  const anualUtilBill = [];
+  const totalYearsSolar = 20;
   let curentPowerBillTrend = 0;
   let floatingPointHack = 0;
   let totalAverage = parseInt(averagePowerBill);
@@ -82,14 +81,14 @@ const calculateYearlyBill = (averagePowerBill, saved) => {
     totalAverage = totalAverage + parseFloat(curentPowerBillTrend);
 
     floatingPointHack = totalAverage.toFixed(2);
-    let moneySavedthisYear = Math.abs(floatingPointHack - parseInt(saved));
+    const moneySavedthisYear = Math.abs(floatingPointHack - parseInt(saved));
     anualUtilBill.push(moneySavedthisYear);
   }
   return anualUtilBill;
 };
 
 const labelYears = () => {
-  let totalYearsSolar = 20;
+  const totalYearsSolar = 20;
   let count = 0;
   let currentYear = new Date().getFullYear(),
     years = [];
@@ -101,8 +100,8 @@ const labelYears = () => {
   return years;
 };
 
-const generateSolarCost = yearlyLoanCost => {
-  let loanCostArray = [];
+const generateSolarCost = (yearlyLoanCost) => {
+  const loanCostArray = [];
   for (let i = 0; i <= 20; i++) {
     loanCostArray.push(yearlyLoanCost);
   }
@@ -110,7 +109,10 @@ const generateSolarCost = yearlyLoanCost => {
   return loanCostArray;
 };
 
-const lineChartData = (dataWithoutSolar, dataWithSolar) => {
+const lineChartData = (
+  dataWithoutSolar: number[],
+  dataWithSolar: unknown[]
+) => {
   return {
     labels: labelYears(),
     datasets: [
@@ -121,7 +123,7 @@ const lineChartData = (dataWithoutSolar, dataWithSolar) => {
         data: dataWithSolar,
         borderWidth: 4,
         fill: false,
-        pointRadius: 0.5
+        pointRadius: 0.5,
       },
       {
         label: "Without Solar",
@@ -130,9 +132,9 @@ const lineChartData = (dataWithoutSolar, dataWithSolar) => {
         data: dataWithoutSolar,
         borderWidth: 4,
         fill: false,
-        pointRadius: 0.5
-      }
-    ]
+        pointRadius: 0.5,
+      },
+    ],
   };
 };
 
@@ -143,10 +145,10 @@ const data = (fromUtility, offSetPowerbillPrice) => {
       {
         data: [fromUtility, offSetPowerbillPrice],
         backgroundColor: ["#FF6384", "#3b78df"],
-        hoverBackgroundColor: ["#FF6384", "#3b78df"]
-      }
+        hoverBackgroundColor: ["#FF6384", "#3b78df"],
+      },
     ],
-    text: "45%"
+    text: "45%",
   };
 };
 
@@ -156,11 +158,11 @@ const Graph = ({
   moneySaved,
   averagePowerBill,
   yearlyLoanCost,
-  offSetPowerbillPrice
+  offSetPowerbillPrice,
 }) => {
-  let fromUtility = (1 - parseFloat(offSetPowerbillPrice)).toFixed(4);
-  let dataWithoutSolar = calculateYearlyBill(averagePowerBill, 0);
-  let dataWithSolar = generateSolarCost(yearlyLoanCost);
+  const fromUtility = (1 - parseFloat(offSetPowerbillPrice)).toFixed(4);
+  const dataWithoutSolar = calculateYearlyBill(averagePowerBill, 0);
+  const dataWithSolar = generateSolarCost(yearlyLoanCost);
 
   return (
     <div style={{ height: "400px" }}>

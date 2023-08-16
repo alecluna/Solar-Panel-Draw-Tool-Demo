@@ -1,4 +1,3 @@
-import React from "react";
 import tutorial from "../../assets/tutorial.gif";
 
 const Tutorial = () => (
@@ -7,8 +6,10 @@ const Tutorial = () => (
       src={tutorial}
       alt="tutorial"
       style={{
+        maxWidth: "100%",
         width: "100%",
-        borderRadius: 10
+        borderRadius: 10,
+        boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
       }}
     />
   </>

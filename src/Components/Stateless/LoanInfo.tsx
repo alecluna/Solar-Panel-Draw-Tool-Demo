@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Dialog,
   DialogActions,
@@ -6,7 +5,7 @@ import {
   Typography,
   Card,
   CardContent,
-  DialogContent
+  DialogContent,
 } from "@material-ui/core";
 import CountUp from "react-countup";
 import Graph from "../Graphs/Graph";
@@ -18,21 +17,21 @@ const styles = {
     width: "30em",
     height: 125,
     boxShadow:
-      "0 10px 20px rgba(186, 186, 186, 0.3), 0 6px 6px rgba(193, 193, 193, 0.22)"
+      "0 10px 20px rgba(186, 186, 186, 0.3), 0 6px 6px rgba(193, 193, 193, 0.22)",
   },
   graphCardStyle: {
     margin: "10px",
     width: "30em",
     boxShadow:
-      "0 10px 20px rgba(186, 186, 186, 0.3), 0 6px 6px rgba(193, 193, 193, 0.22)"
+      "0 10px 20px rgba(186, 186, 186, 0.3), 0 6px 6px rgba(193, 193, 193, 0.22)",
   },
   dialogueStyle: {
     display: "flex",
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "center",
-    padding: "5px"
-  }
+    padding: "5px",
+  },
 };
 
 const LoanInfo = ({
@@ -45,29 +44,28 @@ const LoanInfo = ({
   initialCost,
   averagePowerBill,
   offSetPowerbillPrice,
-  togglePrivacyPolicy
 }) => {
   const calculateLoanTerm = () => {
-    let principalVal = loanCost;
-    let termLength = -240;
-    let interest = 0.0479 / 12;
-    let loan =
+    const principalVal = loanCost;
+    const termLength = -240;
+    const interest = 0.0479 / 12;
+    const loan =
       (principalVal * interest) / (1 - Math.pow(1 + interest, termLength));
     return Math.round(loan);
   };
 
   const calculateSavingsOverLife = () => {
-    let calculateBill = calculateYearlyBill(averagePowerBill, 0);
-    let loanterm = calculateLoanTerm();
-    let totalMonthlyLoan = loanterm * 240;
-    let totalDifferenceInSavings = calculateBill - totalMonthlyLoan;
+    const calculateBill = calculateYearlyBill(averagePowerBill, 0);
+    const loanterm = calculateLoanTerm();
+    const totalMonthlyLoan = loanterm * 240;
+    const totalDifferenceInSavings = calculateBill - totalMonthlyLoan;
     return totalDifferenceInSavings;
   };
 
   //this is the same function from Graph.js but the client wanted this calculation to show
   // in the total amount saved card component, removed the array and just returned sum
   const calculateYearlyBill = (averagePowerBill, saved) => {
-    let totalYearsSolar = 25;
+    const totalYearsSolar = 25;
     let curentPowerBillTrend = 0;
     let floatingPointHack = 0;
     let totalAverage = averagePowerBill * 12;
@@ -85,7 +83,7 @@ const LoanInfo = ({
     return runningTotal;
   };
 
-  let loanTerm = calculateLoanTerm();
+  const loanTerm = calculateLoanTerm();
 
   return (
     <>
@@ -94,7 +92,6 @@ const LoanInfo = ({
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         disableEscapeKeyDown={true}
-        disableBackdropClick={true}
         fullWidth={true}
         maxWidth="lg"
       >
@@ -126,7 +123,7 @@ const LoanInfo = ({
                 display: "flex",
                 flexDirection: "row",
                 flexWrap: "no-wrap",
-                justifyContent: "space-between"
+                justifyContent: "space-between",
               }}
             >
               <div style={{ width: "45%" }}>
@@ -247,11 +244,12 @@ const LoanInfo = ({
         >
           <Button variant="text" align="left">
             <Typography
-              onClick={togglePrivacyPolicy}
               color="textSecondary"
               style={{ textDecoration: "underline", fontSize: ".8em" }}
             >
-              Disclosure, Notice and Privacy Policy:
+              Disclosure: This is just a demo version of the product I built for
+              a client! I'm not storing any info or keeping any data, just
+              wanted to show off this cool tool :D{" "}
             </Typography>
           </Button>
           <Button onClick={handleClose} color="primary">

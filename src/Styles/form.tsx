@@ -1,4 +1,13 @@
-const form = {
+// formStyles.tsx
+
+interface FormStyles {
+  textArea: React.CSSProperties;
+  buttonStyles: React.CSSProperties;
+  formatList: React.CSSProperties;
+  formatErrors: React.CSSProperties;
+}
+
+const form: FormStyles = {
   textArea: {
     boxSizing: "border-box",
     outline: "none",
@@ -10,7 +19,7 @@ const form = {
     background: "transparent",
     marginBottom: "10px",
     font: "16px Arial, Helvetica, sans-serif",
-    height: "45px"
+    height: "45px",
   },
   buttonStyles: {
     display: "inline-block",
@@ -24,8 +33,18 @@ const form = {
     color: "#FFFFFF",
     backgroundColor: "#3a79df",
     textAlign: "center",
-    outline: "none"
-  }
+    outline: "none",
+  },
+  formatList: {
+    paddingTop: "20px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column",
+  },
+  formatErrors: {
+    padding: "0px 20px 5px 20px",
+  },
 };
 
-module.exports = form;
+export default form;

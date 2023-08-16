@@ -2,7 +2,6 @@
  * This component is the form and validation
  * on the left hand panel
  */
-import React from "react";
 import { Typography, List, ListItem, Button } from "@material-ui/core";
 import { withFormik, Form, Field } from "formik";
 import * as yup from "yup";
@@ -14,24 +13,18 @@ const styles = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    flexDirection: "column"
+    flexDirection: "column",
   },
   formatErrors: {
-    padding: "0px 20px 5px 20px"
-  }
+    padding: "0px 20px 5px 20px",
+  },
 };
 
-const AveragePowerBill = ({
-  errors,
-  touched,
-  mobileOpen,
-  handleDrawerToggle,
-  togglePrivacyPolicy
-}) => {
+const AveragePowerBill = ({ errors, touched }) => {
   return (
     <div style={styles.formatList}>
       <List>
-        <Form>
+        <form>
           <ListItem>
             <Typography variant="body2" color="textPrimary">
               <strong>Note:</strong> Do not include gas usage in your average
@@ -74,23 +67,20 @@ const AveragePowerBill = ({
               <Typography color="error">{errors.state}</Typography>
             )}
           </div>
-          <Button
-            onClick={mobileOpen ? handleDrawerToggle : null}
-            style={form.buttonStyles}
-            type="submit"
-          >
+          <Button style={form.buttonStyles} type="submit">
             <Typography> Let's get started</Typography>
           </Button>
-        </Form>
+        </form>
       </List>
       <Button variant="text">
         <Typography
-          onClick={togglePrivacyPolicy}
           variant="body2"
           color="textSecondary"
           style={{ textDecoration: "underline" }}
         >
-          Disclosure, Notice and Privacy Policy:
+          Disclosure: This is just a demo version of the product I built for a
+          client! I'm not storing any info or keeping any data, just wanted to
+          show off this cool tool :D
         </Typography>
       </Button>
     </div>
@@ -103,7 +93,7 @@ const FormikAverageBill = withFormik({
       avgBill: avgBill || "",
       address: address || "",
       city: city || "",
-      state: state || ""
+      state: state || "",
     };
   },
   validationSchema: yup.object().shape({
@@ -129,19 +119,19 @@ const FormikAverageBill = withFormik({
       .string("Error: must by a valid State")
       .max(100, "Error: input is too long")
       .required("State is required")
-      .trim()
+      .trim(),
   }),
   handleSubmit(values, { props: { updateAveragePowerBill, updateLocation } }) {
     const { address, city, avgBill, state } = values;
     if (address && city && avgBill && state) {
-      let buildLoc = `${address.trim()} ${city.trim()} ${state.trim()}`;
-      let averageYearlyPowerBill = avgBill;
+      const buildLoc = `${address.trim()} ${city.trim()} ${state.trim()}`;
+      const averageYearlyPowerBill = avgBill;
       updateAveragePowerBill(averageYearlyPowerBill);
       updateLocation(buildLoc);
     } else {
       return null;
     }
-  }
+  },
 })(AveragePowerBill);
 
 export default FormikAverageBill;
