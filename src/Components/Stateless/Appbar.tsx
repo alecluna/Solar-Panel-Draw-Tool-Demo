@@ -1,6 +1,11 @@
 import { AppBar, CssBaseline, Toolbar, Typography } from "@material-ui/core";
+import { CSSProperties } from "@material-ui/core/styles/withStyles";
 
-const DrawToolAppBar: React.FC = ({ classes }) => {
+type appBar = CSSProperties | undefined;
+interface DrawToolAppBarProps {
+  classes: CSSProperties;
+}
+const DrawToolAppBar: React.FC<DrawToolAppBarProps> = ({ classes }) => {
   return (
     <>
       <CssBaseline />

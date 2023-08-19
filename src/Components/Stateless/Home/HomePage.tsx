@@ -1,52 +1,24 @@
-import React, { useState, useEffect } from "react";
 import { Typography, Button, Divider } from "@material-ui/core";
-import "../../Styles/animation.css";
-import header from "../../assets/HeaderStyle.svg";
-import header500 from "../../assets/HeaderStyle500.svg";
+import "../../../Styles/animation.css";
+import header from "../../../assets/HeaderStyle.svg";
+import header500 from "../../../assets/HeaderStyle500.svg";
+import useWindowSize from "../../Utils/useWindowSize";
 
-import solarCanva from "../../assets/Canva_Solar-min.jpg";
+import solarCanva from "../../../../src/assets/Canva_Solar-min.jpg";
 import ToolDirections from "./ToolDirections";
-import SubmitAddressInfo from "../SubmitAddressInfo/SubmitAddressInfo";
-import HowToUse from "./Home/HowToUse";
+import SubmitAddressInfo from "../../SubmitAddressInfo/SubmitAddressInfo";
+import HowToUse from "./HowToUse";
 import {
   BackgroundImage,
   StyledContainer,
   HeaderText,
   SolarImage,
   StyledOverlay,
-} from "./Home/styles";
+} from "./styles";
 
 // Custom window sizing hook
-function useWindowSize() {
-  const isClient = typeof window === "object";
 
-  function getSize() {
-    return {
-      width: isClient ? window.innerWidth : undefined,
-      height: isClient ? window.innerHeight : undefined,
-    };
-  }
-
-  const [windowSize, setWindowSize] = useState(getSize);
-
-  useEffect(() => {
-    if (!isClient) {
-      return false;
-    }
-
-    function handleResize() {
-      setWindowSize(getSize());
-    }
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Empty array ensures that effect is only run on mount and unmount
-
-  return windowSize;
-}
-
-type UpdateAveragePowerBill = (averagePowerBill: Partial<number>) => void;
+type UpdateAveragePowerBill = (averagePowerBill: number | string) => void;
 type UpdateLocation = (location: Partial<string>) => void;
 
 interface SubmitAddressInfoProps {
@@ -60,12 +32,12 @@ const HomePage: React.FC<SubmitAddressInfoProps> = ({
 }) => {
   //custom window size hook
   const size = useWindowSize();
-
+  const width = size.width;
   return (
     <>
       <StyledContainer>
         <BackgroundImage
-          src={size.width <= 650 ? header500 : header}
+          src={width !== undefined && width <= 650 ? header500 : header}
           alt="header"
         />
         <StyledOverlay>

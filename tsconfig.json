@@ -18,7 +18,11 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "baseUrl": "./src", // Set this to the path of your source code directory
+    "paths": {
+      "@/*": ["*"] // Alias for your source directory
+    }
   },
   "include": ["src", "src/*"]
 }

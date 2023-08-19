@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
 import PopUpValidator from "./Stateless/PopUp";
 import LoanInfo from "./Stateless/LoanInfo";
 
 import Map from "./MapComponents/Map";
-import HomePage from "./Stateless/HomePage";
+import HomePage from "./Stateless/Home/HomePage";
 import axios from "axios";
 import "../Styles/animation.css";
 import DrawToolAppBar from "./Stateless/Appbar";
@@ -43,17 +43,20 @@ interface ContainerState {
   // Add more state properties here
 }
 
+type UpdateAveragePowerBill = (
+  averagePowerBill: SetStateAction<number | string>
+) => void;
+
 const Container = () => {
   const classes = useStyles();
 
   const [open, setOpen] = useState(false);
-  const [privacyPolicy, setPrivacyPolicy] = useState(false);
   const [openLoanInfo, setOpenLoanInfo] = useState(false);
   const [isEmailProvided, setIsEmailProvided] = useState(false);
   const [lat, setLat] = useState<number>(0);
   const [lng, setLng] = useState<number>(0);
   const [location, setLocation] = useState<string>("");
-  const [squareFootage, setSquareFootage] = useState(null);
+  const [squareFootage, setSquareFootage] = useState<number | null>(null);
   const [email, setEmail] = useState("");
   const [loanCost, setLoanCost] = useState(0);
   const [numberOfPanels, setNumberOfPanels] = useState(0);
@@ -65,7 +68,7 @@ const Container = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
-  const [errorDialogOpen, setErrorDialogOpen] = useState(false);
+  const [errorDialogOpen, setErrorDialogOpen] = useState<boolean>(false);
   const [isLoading, setLoading] = useState(false);
   const [showMapBox, setShowMapBox] = useState(false);
 
@@ -103,16 +106,22 @@ const Container = () => {
     getLocationFromGoogleAPI(location);
   };
 
-  const updateSquareFootage = (newsSquareFootage) => {
+  const updateSquareFootage = (newsSquareFootage: number) => {
     setSquareFootage(newsSquareFootage);
     toggleCollectLeadInfo();
   };
 
-  const updateAveragePowerBill = (averageYearlyPowerBill) => {
+  const updateAveragePowerBill: UpdateAveragePowerBill = (
+    averageYearlyPowerBill: SetStateAction<string>
+  ) => {
     setAveragePowerBill(averageYearlyPowerBill);
   };
 
-  const toggleEmailProvided = (phoneNumber, name, buildEmail) => {
+  const toggleEmailProvided = (
+    phoneNumber: SetStateAction<string>,
+    name: SetStateAction<string>,
+    buildEmail: SetStateAction<string>
+  ) => {
     if (name || phoneNumber) {
       setIsEmailProvided(true);
       setEmail(buildEmail);
@@ -125,6 +134,8 @@ const Container = () => {
     // sendEmail();
   };
 
+  // NOTE: This is the function that sends the email to the user
+  // No longer needed for Demo version
   // const sendEmail = () => {
   //   const url =
   //     "https://kdqi0skbo3.execute-api.us-east-1.amazonaws.com/default/handleEmails";
@@ -228,6 +239,8 @@ const Container = () => {
             <Map
               center={{ lat, lng }}
               updateSquareFootage={updateSquareFootage}
+              errorDialogOpen={errorDialogOpen}
+              setRrrorDialogOpen={setErrorDialogOpen}
             />
           </div>
         ) : (

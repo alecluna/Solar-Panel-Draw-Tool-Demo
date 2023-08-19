@@ -3,7 +3,9 @@ import * as yup from "yup";
 import { Typography, List, ListItem, Button } from "@material-ui/core";
 import form from "../../Styles/form";
 
-type UpdateAveragePowerBill = (averagePowerBill: Partial<number>) => void;
+type UpdateAveragePowerBill = (
+  averagePowerBill: Partial<number | string>
+) => void;
 type UpdateLocation = (location: Partial<string>) => void;
 
 interface SubmitAddressInfoProps {
@@ -38,18 +40,18 @@ const SubmitAddressInfo: React.FC<SubmitAddressInfoProps> = ({
         .required("Error: Average Bill is required")
         .typeError("Error: you must specify a number"),
       address: yup
-        .string("Error: must be a valid Address")
+        .string()
         .max(60, "Error: must be a valid Address")
         .required("Error: Address is required")
         .typeError("Error: must be a valid address")
         .trim(),
       city: yup
-        .string("Error: must be a valid City")
+        .string()
         .max(120, "Error: input is too long")
         .required("City is required")
         .trim(),
       state: yup
-        .string("Error: must by a valid State")
+        .string()
         .max(100, "Error: input is too long")
         .required("State is required")
         .trim(),
@@ -83,7 +85,7 @@ const SubmitAddressInfo: React.FC<SubmitAddressInfoProps> = ({
         <Form>
           <List>
             <ListItem>
-              <Typography variant="title" color="textPrimary">
+              <Typography variant="h6" color="textPrimary">
                 <strong>Note:</strong> Do not include gas usage in your average
                 bill.
               </Typography>

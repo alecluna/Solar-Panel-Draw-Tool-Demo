@@ -5,24 +5,44 @@ import {
   GoogleMap,
   Polygon,
   useJsApiLoader,
+  Libraries,
 } from "@react-google-maps/api";
 import deleteIcon from "../../assets/remove.png";
+import ErrorDialog from "../Stateless/ErrorDialog";
 
-const MapComponent = ({ center: { lat, lng }, updateSquareFootage }) => {
-  const mapRef = useRef();
-  const polygonRefs = useRef([]);
-  const activePolygonIndex = useRef();
-  const autocompleteRef = useRef();
+interface LatLng {
+  lat: number | undefined;
+  lng: number | undefined;
+}
+
+type PolygonType = LatLng[];
+interface CenterType {
+  lat: string;
+  lng: string;
+}
+
+interface PropsType {
+  lat: string;
+  lng: string;
+  updateSquareFootage: (param1: number) => void; // Example type
+  center: CenterType;
+  errorDialogOpen: boolean;
+  setErrorDialogOpen: (param1: boolean) => void;
+}
+
+const MapComponent: React.FC<PropsType> = ({
+  center: { lat: latitude, lng: longitude },
+  errorDialogOpen,
+  setErrorDialogOpen,
+  updateSquareFootage,
+}) => {
+  const mapRef = useRef<unknown>();
+  const polygonRefs = useRef<unknown[]>([]);
+  const activePolygonIndex = useRef<number | undefined>();
+  const autocompleteRef = useRef<unknown>();
   const drawingManagerRef = useRef();
 
-  const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_API_KEY,
-    libraries: ["places", "drawing", "geometry"],
-    version: "weekly",
-    id: "script-loader",
-  });
-
-  const [polygons, setPolygons] = useState([
+  const [polygons, setPolygons] = useState<LatLng[][]>([
     [
       { lat: undefined, lng: undefined },
       { lat: undefined, lng: undefined },
@@ -39,14 +59,21 @@ const MapComponent = ({ center: { lat, lng }, updateSquareFootage }) => {
   ]);
 
   const defaultCenter = {
-    lat: parseFloat(lat),
-    lng: parseFloat(lng),
+    lat: parseFloat(latitude),
+    lng: parseFloat(longitude),
   };
   const [center, setCenter] = useState(defaultCenter);
+  const [libraries] = useState<Libraries>(["places", "drawing", "geometry"]);
+
+  const { isLoaded, loadError } = useJsApiLoader({
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_API_KEY,
+    libraries,
+    version: "weekly",
+    id: "script-loader",
+  });
 
   const containerStyle = {
     width: "100vw",
-    // height: "calc(100vh - 64px)",
     height: "100vh",
   };
 
@@ -89,6 +116,13 @@ const MapComponent = ({ center: { lat, lng }, updateSquareFootage }) => {
     editable: true,
   };
 
+  const googleMapOptions = {
+    streetViewControl: false,
+    fullscreenControl: false,
+    gestureHandling: "greedy",
+    // mapTypeId: mapRef.current.MapTypeId.SATELLITE,
+  };
+
   const drawingManagerOptions = {
     polygonOptions: polygonOptions,
     drawingControl: true,
@@ -98,12 +132,16 @@ const MapComponent = ({ center: { lat, lng }, updateSquareFootage }) => {
     },
   };
 
-  const onLoadMap = (map) => {
+  const onLoadMap = (map: object) => {
     mapRef.current = map;
+    // console.log("on loaded map: ", map);
     // map.setMapTypeId(map.MapTypeId.SATELLITE);
   };
 
-  const onLoadPolygon = (polygon, index) => {
+  const onLoadPolygon: (polygon: PolygonType, index: number) => void = (
+    polygon: PolygonType,
+    index: number
+  ) => {
     polygonRefs.current[index] = polygon;
   };
 
@@ -131,19 +169,35 @@ const MapComponent = ({ center: { lat, lng }, updateSquareFootage }) => {
     drawingManagerRef.current = drawingManager;
   };
 
+  // Q what does this function do?
   const onOverlayComplete = (overlayEvent) => {
     drawingManagerRef.current.setDrawingMode(null);
+    // console.log(
+    //   "overlayEvent.overlay: ",
+    //   overlayEvent.overlay.getPath().getArray()
+    // );
     if (overlayEvent.type === window.google.maps.drawing.OverlayType.POLYGON) {
       const newPolygon = overlayEvent.overlay
         .getPath()
         .getArray()
-        .map((latLng) => ({ lat: latLng.lat(), lng: latLng.lng() }));
+        .map((latLng: any) => ({
+          lat: latLng.lat(),
+          lng: latLng.lng(),
+        }));
+
+      console.log("newPolygon: ", newPolygon);
+      const area =
+        window.google.maps.geometry.spherical.computeArea(newPolygon);
+      console.log("area: ", area);
 
       // start and end point should be same for valid geojson
       const startPoint = newPolygon[0];
+
       newPolygon.push(startPoint);
       overlayEvent.overlay?.setMap(null);
       setPolygons([...polygons, newPolygon]);
+
+      // onPolygonComplete(newPolygon);
     }
   };
 
@@ -151,6 +205,7 @@ const MapComponent = ({ center: { lat, lng }, updateSquareFootage }) => {
     const filtered = polygons.filter(
       (polygon, index) => index !== activePolygonIndex.current
     );
+
     setPolygons(filtered);
   };
 
@@ -163,36 +218,38 @@ const MapComponent = ({ center: { lat, lng }, updateSquareFootage }) => {
         .map((latLng) => ({ lat: latLng.lat(), lng: latLng.lng() }));
 
       const allPolygons = [...polygons];
-      console.log("allPolygons: ", allPolygons);
+      // console.log("allPolygons: ", allPolygons);
       allPolygons[index] = coordinates;
       setPolygons(allPolygons);
     }
   };
 
-  console.log("activePolygonIndex: ", activePolygonIndex);
   const onPolygonComplete = (poly) => {
+    // console.log("poly: ", poly);
     if (poly) {
-      const coordinates = poly.getPath().getArray();
-
       const paths = [];
-      coordinates.forEach((path) => {
+      poly.forEach((path) => {
         paths.push({ latitude: path.lat(), longitude: path.lng() });
       });
-
       const area = window.google.maps.geometry.spherical.computeArea(
         poly.getPath()
       );
-
       updateSquareFootage(area * 10.76);
       poly.setMap(null);
     }
   };
 
-  // console.log(
-  //   "drawingManagerRef.current: ",
-  //   drawingManagerRef.current,
-  //   mapRef.current
-  // );
+  if (loadError) {
+    return (
+      <ErrorDialog
+        open={errorDialogOpen}
+        onClose={() => setErrorDialogOpen(!errorDialogOpen)}
+        title="Error with request"
+        message="Whoops, something went wrong with your request, please try again"
+      />
+    );
+  }
+
   return isLoaded ? (
     <div className="map-container" style={{ position: "relative" }}>
       {drawingManagerRef.current && (
@@ -208,29 +265,30 @@ const MapComponent = ({ center: { lat, lng }, updateSquareFootage }) => {
         onLoad={onLoadMap}
         mapContainerStyle={containerStyle}
         onTilesLoaded={() => setCenter(null)}
-        // options={{
-        //   mapTypeId: mapRef?.current?.MapTypeId?.SATELLITE,
-        // }}
+        options={googleMapOptions}
       >
         <DrawingManagerF
           onLoad={onLoadDrawingManager}
           onOverlayComplete={onOverlayComplete}
           options={drawingManagerOptions}
+          onPolygonComplete={onOverlayComplete}
         />
-        {polygons.map((iterator, index) => (
-          <Polygon
-            key={index}
-            onLoad={(event) => onLoadPolygon(event, index)}
-            onMouseDown={() => onClickPolygon(index)}
-            onClick={() => onClickPolygon(index)}
-            onMouseUp={() => onEditPolygon(index)}
-            onDragEnd={() => onEditPolygon(index)}
-            options={polygonOptions}
-            paths={iterator}
-            draggable
-            editable
-          />
-        ))}
+        {polygons.map((iterator, index) => {
+          // console.log("iterator: ", iterator, "index: ", index);
+          return (
+            <Polygon
+              key={index}
+              onLoad={(event) => onLoadPolygon(event, index)}
+              onMouseDown={() => onClickPolygon(index)}
+              onMouseUp={() => onEditPolygon(index)}
+              onDragEnd={() => onEditPolygon(index)}
+              options={polygonOptions}
+              paths={iterator}
+              draggable
+              editable
+            />
+          );
+        })}
         <Autocomplete
           onLoad={onLoadAutocomplete}
           onPlaceChanged={onPlaceChanged}

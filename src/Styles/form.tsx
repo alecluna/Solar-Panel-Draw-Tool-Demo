@@ -41,6 +41,7 @@ const form: FormStyles = {
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "column",
+    maxWidth: 800,
   },
   formatErrors: {
     padding: "0px 20px 5px 20px",
