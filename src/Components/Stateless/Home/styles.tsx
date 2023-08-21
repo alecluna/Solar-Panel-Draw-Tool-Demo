@@ -1,13 +1,9 @@
 import { styled } from "styled-components";
 
-const BackgroundImage = styled.img`
-  -webkit-background-size: auto;
-  -moz-background-size: auto;
-  -o-background-size: auto;
-  background-size: auto;
+const BackgroundImage = styled.div`
   width: 100%;
-  max-width: 100%;
-  height: auto;
+  height: 800px; /* Adjust height as needed */
+  background: linear-gradient(135deg, #ffff 0%, #20c6fa 100%);
 `;
 
 const StyledContainer = styled.div`
@@ -18,9 +14,7 @@ const StyledContainer = styled.div`
   flex-wrap: no-wrap;
   flex-direction: row;
   align-items: center;
-  padding-top: 5em;
   overflow: hidden;
-  position: relative; /* Create a positioning context for absolute positioning */
 
   @media (max-width: 200px) {
     padding-top: 4em;
@@ -29,9 +23,6 @@ const StyledContainer = styled.div`
 `;
 
 const StyledOverlay = styled.div`
-  position: absolute; /* Position the overlay elements absolutely */
-  top: 0;
-  left: 0;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -39,7 +30,6 @@ const StyledOverlay = styled.div`
   justify-content: space-evenly;
   width: 100%;
   height: 100%;
-  color: white;
 `;
 
 const HeaderText = styled.div`

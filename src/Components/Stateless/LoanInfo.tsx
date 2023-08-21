@@ -34,7 +34,19 @@ const styles = {
   },
 };
 
-const LoanInfo = ({
+interface LoanInfoProps {
+  open: boolean;
+  squareFootage: number | null;
+  handleClose: () => void;
+  loanCost: number;
+  numberOfPanels: number;
+  sysSizeKiloWatts: number;
+  initialCost: number;
+  averagePowerBill: number;
+  offSetPowerbillPrice: number;
+}
+
+const LoanInfo: React.FC<LoanInfoProps> = ({
   open,
   squareFootage,
   handleClose,
@@ -55,7 +67,7 @@ const LoanInfo = ({
   };
 
   const calculateSavingsOverLife = () => {
-    const calculateBill = calculateYearlyBill(averagePowerBill, 0);
+    const calculateBill = calculateYearlyBill(averagePowerBill);
     const loanterm = calculateLoanTerm();
     const totalMonthlyLoan = loanterm * 240;
     const totalDifferenceInSavings = calculateBill - totalMonthlyLoan;
@@ -64,7 +76,7 @@ const LoanInfo = ({
 
   //this is the same function from Graph.js but the client wanted this calculation to show
   // in the total amount saved card component, removed the array and just returned sum
-  const calculateYearlyBill = (averagePowerBill, saved) => {
+  const calculateYearlyBill = (averagePowerBill: number) => {
     const totalYearsSolar = 25;
     let curentPowerBillTrend = 0;
     let floatingPointHack = 0;

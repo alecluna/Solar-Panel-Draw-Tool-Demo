@@ -1,7 +1,5 @@
 import { Typography, Button, Divider } from "@material-ui/core";
 import "../../../Styles/animation.css";
-import header from "../../../assets/HeaderStyle.svg";
-import header500 from "../../../assets/HeaderStyle500.svg";
 import useWindowSize from "../../Utils/useWindowSize";
 
 import solarCanva from "../../../../src/assets/Canva_Solar-min.jpg";
@@ -15,8 +13,6 @@ import {
   SolarImage,
   StyledOverlay,
 } from "./styles";
-
-// Custom window sizing hook
 
 type UpdateAveragePowerBill = (averagePowerBill: number | string) => void;
 type UpdateLocation = (location: Partial<string>) => void;
@@ -36,40 +32,27 @@ const HomePage: React.FC<SubmitAddressInfoProps> = ({
   return (
     <>
       <StyledContainer>
-        <BackgroundImage
-          src={width !== undefined && width <= 650 ? header500 : header}
-          alt="header"
-        />
-        <StyledOverlay>
-          <HeaderText>
-            <Typography
-              align="center"
-              style={{ fontSize: "3.5em", color: "white", fontWeight: 300 }}
-            >
-              Welcome to
-            </Typography>
-            <Typography
-              align="center"
-              style={{
-                fontSize: "3.5em",
-                color: "white",
-                paddingBottom: 10,
-                fontWeight: 300,
-              }}
-            >
-              {" "}
-              My Solar Cost
-            </Typography>
-            <ToolDirections />
-            <Button style={{ color: "white" }} onClick={() => null}>
-              Click Here to Get Started
-            </Button>
-          </HeaderText>
+        <BackgroundImage>
+          {/* // src={width !== undefined && width <= 650 ? header500 : header}
+          // alt="header" */}
+          <StyledOverlay>
+            <HeaderText>
+              <Typography align="center" variant="h3">
+                Welcome to
+              </Typography>
+              <Typography align="center" variant="h3" style={{}}>
+                {" "}
+                My Solar Cost
+              </Typography>
+              <ToolDirections />
+              <Button onClick={() => null}>Click Here to Get Started</Button>
+            </HeaderText>
 
-          <div style={{ marginTop: "4em" }}>
-            <SolarImage src={solarCanva} alt="solar neighborhood" />
-          </div>
-        </StyledOverlay>
+            <div style={{ marginTop: "4em" }}>
+              <SolarImage src={solarCanva} alt="solar neighborhood" />
+            </div>
+          </StyledOverlay>
+        </BackgroundImage>
       </StyledContainer>
       <div
         style={{

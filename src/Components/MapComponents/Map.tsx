@@ -16,25 +16,19 @@ interface LatLng {
 }
 
 type PolygonType = LatLng[];
-interface CenterType {
-  lat: string;
-  lng: string;
-}
 
-interface PropsType {
-  lat: string;
-  lng: string;
-  updateSquareFootage: (param1: number) => void; // Example type
-  center: CenterType;
+interface MapTypes {
+  center: LatLng;
   errorDialogOpen: boolean;
-  setErrorDialogOpen: (param1: boolean) => void;
+  onUpdateSquareFootage: (area: number) => void;
+  setErrorDialogOpen: (isOpen: boolean) => void;
 }
 
-const MapComponent: React.FC<PropsType> = ({
+const Map: React.FC<MapTypes> = ({
   center: { lat: latitude, lng: longitude },
   errorDialogOpen,
   setErrorDialogOpen,
-  updateSquareFootage,
+  onUpdateSquareFootage,
 }) => {
   const mapRef = useRef<unknown>();
   const polygonRefs = useRef<unknown[]>([]);
@@ -59,8 +53,8 @@ const MapComponent: React.FC<PropsType> = ({
   ]);
 
   const defaultCenter = {
-    lat: parseFloat(latitude),
-    lng: parseFloat(longitude),
+    lat: latitude,
+    lng: longitude,
   };
   const [center, setCenter] = useState(defaultCenter);
   const [libraries] = useState<Libraries>(["places", "drawing", "geometry"]);
@@ -146,7 +140,6 @@ const MapComponent: React.FC<PropsType> = ({
   };
 
   const onClickPolygon = (index) => {
-    console.log("index of clicked polygon: ", index);
     activePolygonIndex.current = index;
   };
 
@@ -185,10 +178,10 @@ const MapComponent: React.FC<PropsType> = ({
           lng: latLng.lng(),
         }));
 
-      console.log("newPolygon: ", newPolygon);
       const area =
         window.google.maps.geometry.spherical.computeArea(newPolygon);
-      console.log("area: ", area);
+
+      onUpdateSquareFootage(area * 10.76);
 
       // start and end point should be same for valid geojson
       const startPoint = newPolygon[0];
@@ -196,8 +189,6 @@ const MapComponent: React.FC<PropsType> = ({
       newPolygon.push(startPoint);
       overlayEvent.overlay?.setMap(null);
       setPolygons([...polygons, newPolygon]);
-
-      // onPolygonComplete(newPolygon);
     }
   };
 
@@ -221,21 +212,6 @@ const MapComponent: React.FC<PropsType> = ({
       // console.log("allPolygons: ", allPolygons);
       allPolygons[index] = coordinates;
       setPolygons(allPolygons);
-    }
-  };
-
-  const onPolygonComplete = (poly) => {
-    // console.log("poly: ", poly);
-    if (poly) {
-      const paths = [];
-      poly.forEach((path) => {
-        paths.push({ latitude: path.lat(), longitude: path.lng() });
-      });
-      const area = window.google.maps.geometry.spherical.computeArea(
-        poly.getPath()
-      );
-      updateSquareFootage(area * 10.76);
-      poly.setMap(null);
     }
   };
 
@@ -271,10 +247,8 @@ const MapComponent: React.FC<PropsType> = ({
           onLoad={onLoadDrawingManager}
           onOverlayComplete={onOverlayComplete}
           options={drawingManagerOptions}
-          onPolygonComplete={onOverlayComplete}
         />
         {polygons.map((iterator, index) => {
-          // console.log("iterator: ", iterator, "index: ", index);
           return (
             <Polygon
               key={index}
@@ -308,4 +282,4 @@ const MapComponent: React.FC<PropsType> = ({
   );
 };
 
-export default MapComponent;
+export default Map;

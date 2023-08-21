@@ -1,9 +1,7 @@
 import { Typography, List, ListItem } from "@material-ui/core";
 
 const styles = {
-  color: "white",
-  fontSize: "1.5em",
-  fontWeight: "400",
+  fontSize: "1.2em",
 };
 
 const ToolDirections = () => (
