@@ -3,9 +3,8 @@ import * as yup from "yup";
 import { Typography, List, ListItem, Button } from "@material-ui/core";
 import form from "../../Styles/form";
 
-type UpdateAveragePowerBill = (
-  averagePowerBill: Partial<number | string>
-) => void;
+type UpdateAveragePowerBill = (averagePowerBill: number) => void;
+
 type UpdateLocation = (location: Partial<string>) => void;
 
 interface SubmitAddressInfoProps {
@@ -64,32 +63,77 @@ const SubmitAddressInfo: React.FC<SubmitAddressInfoProps> = ({
     if (address && city && avgBill && state) {
       const buildLoc = `${address.trim()} ${city.trim()} ${state.trim()}`;
       const averageYearlyPowerBill = avgBill;
-      updateAveragePowerBill(averageYearlyPowerBill);
+      updateAveragePowerBill(parseInt(averageYearlyPowerBill));
       updateLocation(buildLoc);
     }
   };
 
   const { touched, errors } = formik;
+
+  const getErrors = () => {
+    switch (
+      (touched.avgBill && errors.avgBill) ||
+      (touched.address && errors.address) ||
+      (touched.city && errors.city) ||
+      (touched.state && errors.state)
+    ) {
+      case errors.avgBill:
+        return (
+          <Typography color="error" style={form.formatErrors}>
+            {errors.avgBill}
+          </Typography>
+        );
+
+      case errors.address:
+        return (
+          <Typography color="error" style={form.formatErrors}>
+            {errors.address}
+          </Typography>
+        );
+
+      case errors.city:
+        return (
+          <Typography color="error" style={form.formatErrors}>
+            {errors.city}
+          </Typography>
+        );
+
+      case errors.state:
+        return (
+          touched.state &&
+          errors.state && (
+            <Typography color="error" style={form.formatErrors}>
+              {errors.state}
+            </Typography>
+          )
+        );
+
+      default:
+        return null;
+    }
+  };
+
   return (
     <div style={form.formatList}>
-      <Typography
-        variant="h5"
-        color="textPrimary"
-        style={{ fontWeight: "bold", marginBottom: 24 }}
-      >
-        {" "}
-        Start here by locating your property{" "}
-      </Typography>
+      <div>
+        <Typography
+          variant="h5"
+          color="textPrimary"
+          style={{ fontWeight: "bold", marginBottom: 24 }}
+        >
+          {" "}
+          Start here by locating your property{" "}
+        </Typography>
+        <Typography variant="h6" color="textPrimary">
+          <strong>Note:</strong> Do not include gas usage in your average bill.
+        </Typography>
+      </div>
+      {getErrors()}
 
       <FormikProvider value={formik}>
         <Form>
           <List>
-            <ListItem>
-              <Typography variant="h6" color="textPrimary">
-                <strong>Note:</strong> Do not include gas usage in your average
-                bill.
-              </Typography>
-            </ListItem>
+            <ListItem></ListItem>
             <ListItem>
               <Field
                 style={form.textArea}
@@ -97,11 +141,6 @@ const SubmitAddressInfo: React.FC<SubmitAddressInfoProps> = ({
                 {...formik.getFieldProps("avgBill")}
               />
             </ListItem>
-            {touched.avgBill && errors.avgBill && (
-              <Typography color="error" style={form.formatErrors}>
-                {errors.avgBill}
-              </Typography>
-            )}
 
             <ListItem>
               <Field
@@ -110,11 +149,6 @@ const SubmitAddressInfo: React.FC<SubmitAddressInfoProps> = ({
                 {...formik.getFieldProps("address")}
               />
             </ListItem>
-            {touched.address && errors.address && (
-              <Typography color="error" style={form.formatErrors}>
-                {errors.address}
-              </Typography>
-            )}
 
             <ListItem>
               <Field
@@ -123,11 +157,6 @@ const SubmitAddressInfo: React.FC<SubmitAddressInfoProps> = ({
                 {...formik.getFieldProps("city")}
               />
             </ListItem>
-            {touched.city && errors.city && (
-              <Typography color="error" style={form.formatErrors}>
-                {errors.city}
-              </Typography>
-            )}
 
             <ListItem>
               <Field
@@ -136,27 +165,11 @@ const SubmitAddressInfo: React.FC<SubmitAddressInfoProps> = ({
                 {...formik.getFieldProps("state")}
               />
             </ListItem>
-            {touched.state && errors.state && (
-              <Typography color="error" style={form.formatErrors}>
-                {errors.state}
-              </Typography>
-            )}
+
             <Button style={form.buttonStyles} type="submit">
               <Typography> Let's get started</Typography>
             </Button>
           </List>
-          <Button variant="text">
-            <Typography
-              onClick={() => null}
-              variant="body2"
-              color="textSecondary"
-              style={{ textDecoration: "underline" }}
-            >
-              Disclosure: This is just a demo version of the product I built for
-              a client! I'm not storing any info and keeping any data, just
-              wanted to show off this cool tool :D{" "}
-            </Typography>
-          </Button>
         </Form>
       </FormikProvider>
     </div>

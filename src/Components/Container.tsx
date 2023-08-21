@@ -1,70 +1,34 @@
-import { SetStateAction, useState } from "react";
+import { useState } from "react";
 
-import { makeStyles } from "@material-ui/core/styles";
+// import { makeStyles } from "@material-ui/core/styles";
 import { AWS_LAMBDA_URL, GOOGLE_MAPS_LOCATION_URL } from "./Utils/constants";
 import LoanInfo from "./Stateless/LoanInfo";
 
 import Map from "./MapComponents/Map";
 import HomePage from "./Stateless/Home/HomePage";
 import "../Styles/animation.css";
-import DrawToolAppBar from "./Stateless/Appbar";
 
 import CircularProgress from "@material-ui/core/CircularProgress";
 import ErrorDialog from "./Stateless/ErrorDialog";
+// import { containerStyles } from "../Styles/containerStyles";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-  },
-  appBar: {
-    backgroundColor: "rgba(255, 255, 255, 1)",
-  },
-  toolbar: theme.mixins.toolbar,
-  content: {
-    flexGrow: 1,
-    padding: "1px",
-    backgroundColor: "rgba(255, 255, 255, 1)",
-    height: "100%",
-  },
-  menuIcon: {
-    fontSize: "34px",
-    borderRadius: "20px",
-  },
-  tutorialButton: {
-    backgroundColor: "#3c78dd",
-    color: "#FFFF",
-  },
-}));
-
-interface ContainerState {
-  prop1: string;
-  prop2: number;
-  // Add more state properties here
-}
+// const useStyles = makeStyles(() => ({ ...containerStyles }));
 
 type UpdateAveragePowerBill = (averagePowerBill: number) => void;
 
 const Container = () => {
-  const classes = useStyles();
+  // const classes = useStyles();
 
-  // const [openLeadInfoDialog, setOpenLeadInfoDialog] = useState<boolean>(false);
-  // const [isEmailProvided, setIsEmailProvided] = useState(false);
-  // const [phoneNumber, setPhoneNumber] = useState("");
-  // const [email, setEmail] = useState<string>("");
   const [openLoanInfo, setOpenLoanInfo] = useState<boolean>(false);
   const [lat, setLat] = useState<number>(0);
   const [lng, setLng] = useState<number>(0);
-  const [location, setLocation] = useState<string>("");
   const [squareFootage, setSquareFootage] = useState<number | null>(null);
   const [loanCost, setLoanCost] = useState(0);
-  const [numberOfPanels, setNumberOfPanels] = useState(0);
-  const [sysSizeKiloWatts, setSysSizeKiloWatts] = useState(0);
-  const [systemSizeinWatts, setSystemSizeinWatts] = useState(0);
+  const [numberOfPanels, setNumberOfPanels] = useState<number>(0);
+  const [sysSizeKiloWatts, setSysSizeKiloWatts] = useState<number>(0);
   const [initialCost, setInitialCost] = useState(0);
   const [averagePowerBill, setAveragePowerBill] = useState<number>(0);
   const [offSetPowerbillPrice, setOffSetPowerbillPrice] = useState(0);
-  const [name, setName] = useState("");
-  const [address, setAddress] = useState("");
   const [errorDialogOpen, setErrorDialogOpen] = useState<boolean>(false);
   const [isLoading, setLoading] = useState(false);
   const [showMapBox, setShowMapBox] = useState(false);
@@ -87,7 +51,6 @@ const Container = () => {
   };
 
   const updateLocation = (location: string) => {
-    setLocation(location);
     getLocationFromGoogleAPI(location);
   };
 
@@ -121,7 +84,7 @@ const Container = () => {
         finalCostforLoan,
         numberOfPanels,
         sysSizeKiloWatts,
-        systemSizeinWatts,
+
         initialCost,
         offSetPowerbillPrice,
       } = data;
@@ -129,7 +92,7 @@ const Container = () => {
       setLoanCost(finalCostforLoan);
       setNumberOfPanels(numberOfPanels);
       setSysSizeKiloWatts(sysSizeKiloWatts);
-      setSystemSizeinWatts(systemSizeinWatts);
+
       setInitialCost(initialCost);
       setOffSetPowerbillPrice(offSetPowerbillPrice);
     } catch (error) {
@@ -137,12 +100,16 @@ const Container = () => {
     }
 
     setLoading(false);
-    // toggleOpenLoanInfo();
+    toggleOpenLoanInfo();
   };
 
   const getLocationFromGoogleAPI = async (location: string) => {
-    setAddress(location);
     const url = GOOGLE_MAPS_LOCATION_URL;
+    if (!location || location.length === 0) {
+      setErrorDialogOpen(!errorDialogOpen);
+      return;
+    }
+
     try {
       const response = await fetch(
         `${url}?address=${encodeURIComponent(location)}&key=${
@@ -175,8 +142,7 @@ const Container = () => {
   }
 
   return (
-    <div className={classes.root}>
-      <DrawToolAppBar classes={classes} />
+    <>
       <main>
         {showMapBox ? (
           <div style={{ marginTop: "48px" }}>
@@ -193,44 +159,31 @@ const Container = () => {
             updateLocation={updateLocation}
           />
         )}
-        {/* <PopUpValidatorDialog
-          open={openLeadInfoDialog}
-          squareFootage={squareFootage}
-          handleClose={toggleLeadCollection}
-          toggleEmailProvided={toggleEmailProvided}
-          toggleOpenLoanInfo={toggleOpenLoanInfo}
-          calculateSystemSize={calculateSystemSize}
-          formikPayload={{
-            name,
-            address,
-            phoneNumber,
-            email,
-          }}
-        /> */}
-        <LoanInfo
-          open={openLoanInfo}
-          handleClose={toggleOpenLoanInfo}
-          squareFootage={squareFootage}
-          loanCost={loanCost}
-          numberOfPanels={numberOfPanels}
-          sysSizeKiloWatts={sysSizeKiloWatts}
-          initialCost={initialCost}
-          averagePowerBill={averagePowerBill}
-          offSetPowerbillPrice={offSetPowerbillPrice}
-        />
-        {isLoading && (
-          <div
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-            }}
-          >
-            <CircularProgress thickness={4} />
-          </div>
-        )}
       </main>
-    </div>
+
+      {isLoading && (
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+          }}
+        >
+          <CircularProgress thickness={4} />
+        </div>
+      )}
+      <LoanInfo
+        open={openLoanInfo}
+        handleClose={toggleOpenLoanInfo}
+        squareFootage={squareFootage}
+        loanCost={loanCost}
+        numberOfPanels={numberOfPanels}
+        sysSizeKiloWatts={sysSizeKiloWatts}
+        initialCost={initialCost}
+        averagePowerBill={averagePowerBill}
+        offSetPowerbillPrice={offSetPowerbillPrice}
+      />
+    </>
   );
 };
 

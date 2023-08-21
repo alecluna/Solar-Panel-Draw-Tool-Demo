@@ -2,8 +2,10 @@
  * Component contains all of the graph logic from Chartjs,
  * Passing props down from "LoanInfo.js" parent component
  */
-
 import { Pie, Line } from "react-chartjs-2";
+import { Chart, registerables } from "chart.js";
+
+Chart.register(...registerables);
 
 const optionsCircle = {
   responsive: true,
@@ -24,32 +26,28 @@ const optionsLine = {
   responsive: true,
   maintainAspectRatio: false,
   scales: {
-    xAxes: [
-      {
-        scaleLabel: {
-          display: true,
-          labelString: "Given annual increase of 5.5% to avg. utility bill",
-          fontColor: "#787878",
-          fontSize: 9,
-        },
-        ticks: {
-          maxRotation: 90,
-          minRotation: 90,
+    x: {
+      scaleLabel: {
+        display: true,
+        labelString: "Given annual increase of 5.5% to avg. utility bill",
+        fontColor: "#787878",
+        fontSize: 9,
+      },
+      ticks: {
+        maxRotation: 90,
+        minRotation: 90,
+      },
+    },
+    y: {
+      ticks: {
+        max: 1000,
+        min: 0,
+        stepSize: 100,
+        callback: (value) => {
+          return "$" + value;
         },
       },
-    ],
-    yAxes: [
-      {
-        ticks: {
-          max: 1000,
-          min: 0,
-          stepSize: 100,
-          callback: (value) => {
-            return "$" + value;
-          },
-        },
-      },
-    ],
+    },
   },
   tooltips: {
     enabled: true,
@@ -151,8 +149,16 @@ const data = (fromUtility, offSetPowerbillPrice) => {
     text: "45%",
   };
 };
+interface GraphProps {
+  graphType: string;
+  total: number;
+  moneySaved: number;
+  averagePowerBill: number;
+  yearlyLoanCost: number;
+  offSetPowerbillPrice: number;
+}
 
-const Graph = ({
+const Graph: React.FC<GraphProps> = ({
   graphType,
   total,
   moneySaved,
@@ -174,7 +180,7 @@ const Graph = ({
       ) : (
         <Line
           data={lineChartData(dataWithoutSolar, dataWithSolar)}
-          options={optionsLine}
+          // options={optionsLine}
         />
       )}
     </div>

@@ -1,20 +1,8 @@
-import { Typography, Button, Divider } from "@material-ui/core";
 import "../../../Styles/animation.css";
-import useWindowSize from "../../Utils/useWindowSize";
-
-import solarCanva from "../../../../src/assets/Canva_Solar-min.jpg";
-import ToolDirections from "./ToolDirections";
 import SubmitAddressInfo from "../../SubmitAddressInfo/SubmitAddressInfo";
 import HowToUse from "./HowToUse";
-import {
-  BackgroundImage,
-  StyledContainer,
-  HeaderText,
-  SolarImage,
-  StyledOverlay,
-} from "./styles";
 
-type UpdateAveragePowerBill = (averagePowerBill: number | string) => void;
+type UpdateAveragePowerBill = (averagePowerBill: number) => void;
 type UpdateLocation = (location: Partial<string>) => void;
 
 interface SubmitAddressInfoProps {
@@ -26,15 +14,10 @@ const HomePage: React.FC<SubmitAddressInfoProps> = ({
   updateAveragePowerBill,
   updateLocation,
 }) => {
-  //custom window size hook
-  const size = useWindowSize();
-  const width = size.width;
   return (
     <>
-      <StyledContainer>
+      {/* <StyledContainer>
         <BackgroundImage>
-          {/* // src={width !== undefined && width <= 650 ? header500 : header}
-          // alt="header" */}
           <StyledOverlay>
             <HeaderText>
               <Typography align="center" variant="h3">
@@ -53,18 +36,24 @@ const HomePage: React.FC<SubmitAddressInfoProps> = ({
             </div>
           </StyledOverlay>
         </BackgroundImage>
-      </StyledContainer>
+      </StyledContainer> */}
       <div
         style={{
           display: "flex",
-          justifyContent: "center",
           alignItems: "center",
           flexWrap: "wrap",
+          justifyContent: "space-evenly",
+          flexDirection: "row",
+          // height: "100vh",
+          // overflow: "hidden",
+          maxWidth: "fit-content",
+          margin: "48px auto",
         }}
       >
-        <Divider style={{ margin: "24px 24px", width: "70%" }} />
+        {/* <Divider style={{ margin: "24px 24px", width: "70%" }} /> */}
+
         <HowToUse />
-        <Divider style={{ margin: "24px 24px", width: "70%" }} />
+        {/* <Divider style={{ margin: "24px 24px", width: "70%" }} /> */}
 
         <SubmitAddressInfo
           updateAveragePowerBill={updateAveragePowerBill}

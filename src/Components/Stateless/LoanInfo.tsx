@@ -6,15 +6,19 @@ import {
   Card,
   CardContent,
   DialogContent,
+  DialogTitle,
+  IconButton,
 } from "@material-ui/core";
 import CountUp from "react-countup";
 import Graph from "../Graphs/Graph";
+import CloseIcon from "@material-ui/icons/Close";
 import arrow from "../../assets/right-arrow.svg";
 
 const styles = {
   cardStyle: {
     margin: "10px",
-    width: "30em",
+    maxWidth: "30em",
+    width: "100%",
     height: 125,
     boxShadow:
       "0 10px 20px rgba(186, 186, 186, 0.3), 0 6px 6px rgba(193, 193, 193, 0.22)",
@@ -107,6 +111,43 @@ const LoanInfo: React.FC<LoanInfoProps> = ({
         fullWidth={true}
         maxWidth="lg"
       >
+        <div style={{ position: "relative" }} onClick={handleClose}>
+          <IconButton
+            edge="start"
+            color="inherit"
+            onClick={handleClose}
+            aria-label="close"
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 15,
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </div>
+
+        <DialogTitle id="alert-dialog-title">
+          <div
+            style={{
+              paddingTop: "25px",
+              paddingLeft: "25px",
+              paddingRight: "25px",
+            }}
+          >
+            <Typography align="left" variant="h4" style={styles.fontStyles}>
+              You have selected:{"  "}
+              <strong>
+                <CountUp
+                  useEasing={true}
+                  end={parseInt(squareFootage)}
+                  duration={3}
+                  suffix=" sq. feet"
+                />
+              </strong>
+            </Typography>
+          </div>
+        </DialogTitle>
         <DialogContent style={styles.dialogueStyle}>
           <Card style={styles.cardStyle}>
             <CardContent>
@@ -254,16 +295,15 @@ const LoanInfo: React.FC<LoanInfoProps> = ({
         <DialogActions
           style={{ display: "flex", justifyContent: "space-between" }}
         >
-          <Button variant="text" align="left">
-            <Typography
-              color="textSecondary"
-              style={{ textDecoration: "underline", fontSize: ".8em" }}
-            >
-              Disclosure: This is just a demo version of the product I built for
-              a client! I'm not storing any info or keeping any data, just
-              wanted to show off this cool tool :D{" "}
-            </Typography>
-          </Button>
+          <Typography
+            color="textSecondary"
+            style={{ textDecoration: "none", fontSize: "1em" }}
+          >
+            Disclosure: This is just a demo version of the product I built for a
+            client! I'm not storing any info or keeping any data, just wanted to
+            show off this cool tool :D{" "}
+          </Typography>
+
           <Button onClick={handleClose} color="primary">
             Close
           </Button>

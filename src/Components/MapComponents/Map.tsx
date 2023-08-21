@@ -68,7 +68,7 @@ const Map: React.FC<MapTypes> = ({
 
   const containerStyle = {
     width: "100vw",
-    height: "100vh",
+    height: "calc(100vh - 48px)",
   };
 
   const autocompleteStyle = {
@@ -98,7 +98,7 @@ const Map: React.FC<MapTypes> = ({
     position: "absolute",
     top: "2px",
     left: "52%",
-    zIndex: 99999,
+    zIndex: 10,
   };
 
   const polygonOptions = {

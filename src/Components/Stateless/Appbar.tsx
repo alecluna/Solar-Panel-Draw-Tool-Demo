@@ -1,9 +1,8 @@
 import { AppBar, CssBaseline, Toolbar, Typography } from "@material-ui/core";
-import { CSSProperties } from "@material-ui/core/styles/withStyles";
 
-type appBar = CSSProperties | undefined;
+type AppBar = Record<string, string> | undefined;
 interface DrawToolAppBarProps {
-  classes: CSSProperties;
+  classes: AppBar;
 }
 const DrawToolAppBar: React.FC<DrawToolAppBarProps> = ({ classes }) => {
   return (
@@ -13,7 +12,7 @@ const DrawToolAppBar: React.FC<DrawToolAppBarProps> = ({ classes }) => {
         elevation={0}
         position="fixed"
         color="default"
-        className={classes.appBar}
+        className={classes?.appBar}
       >
         <Toolbar className="toolbar" variant="dense">
           <Typography

@@ -24,5 +24,11 @@
       "@/*": ["*"] // Alias for your source directory
     }
   },
-  "include": ["src", "src/*"]
+  "include": ["src", "src/*"],
+  "exclude": [
+    "node_modules",
+    "**/src/Components/Graphs",
+    "**/src/Components/Stateless/LoanInfo.tsx",
+    "**/src/Components/Stateless/PopUpValidatorDialog.tsx"
+  ]
 }

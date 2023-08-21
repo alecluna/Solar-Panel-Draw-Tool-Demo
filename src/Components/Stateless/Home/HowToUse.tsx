@@ -10,23 +10,34 @@ const HowToUse = () => {
         display: "flex",
         alignItems: "center",
         flexDirection: "column",
-        maxWidth: "800px",
+        flexWrap: "wrap",
+        justifyContent: "space-evenly",
       }}
     >
-      <Typography
-        style={{ fontWeight: "bold", fontSize: "2em", marginBottom: 24 }}
-        align="center"
+      <div
+        style={{
+          margin: 24,
+          display: "flex",
+          alignItems: "center",
+          flexDirection: "column",
+          maxWidth: "600px",
+        }}
       >
-        How to use this tool:
-      </Typography>
+        <Typography
+          style={{ fontWeight: "bold", fontSize: "2em", marginBottom: 24 }}
+          align="center"
+        >
+          How to use this tool:
+        </Typography>
 
-      <Typography
-        style={{ fontWeight: "500", fontSize: "1.5em", marginBottom: 24 }}
-        align="center"
-      >
-        Use your mouse and click on the four corners of your rooftop. This will
-        calculate the area you would like to place your solar panels!
-      </Typography>
+        <Typography
+          style={{ fontWeight: "500", fontSize: "1.5em", marginBottom: 24 }}
+          align="center"
+        >
+          Use your mouse and click on the four corners of your rooftop. This
+          will calculate the area you would like to place your solar panels!
+        </Typography>
+      </div>
 
       <div>
         <Tutorial />
