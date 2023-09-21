@@ -78,35 +78,16 @@ const SubmitAddressInfo: React.FC<SubmitAddressInfoProps> = ({
       (touched.state && errors.state)
     ) {
       case errors.avgBill:
-        return (
-          <Typography color="error" style={form.formatErrors}>
-            {errors.avgBill}
-          </Typography>
-        );
+        return errors.avgBill;
 
       case errors.address:
-        return (
-          <Typography color="error" style={form.formatErrors}>
-            {errors.address}
-          </Typography>
-        );
+        return errors.address;
 
       case errors.city:
-        return (
-          <Typography color="error" style={form.formatErrors}>
-            {errors.city}
-          </Typography>
-        );
+        return errors.city;
 
       case errors.state:
-        return (
-          touched.state &&
-          errors.state && (
-            <Typography color="error" style={form.formatErrors}>
-              {errors.state}
-            </Typography>
-          )
-        );
+        return errors.state;
 
       default:
         return null;
@@ -128,48 +109,49 @@ const SubmitAddressInfo: React.FC<SubmitAddressInfoProps> = ({
           <strong>Note:</strong> Do not include gas usage in your average bill.
         </Typography>
       </div>
-      {getErrors()}
+
+      <div style={{ display: "flex", width: "100%" }}>
+        <Typography color="error" style={form.formatErrors}>
+          {getErrors()}
+        </Typography>
+      </div>
 
       <FormikProvider value={formik}>
-        <Form>
-          <List>
-            <ListItem></ListItem>
-            <ListItem>
-              <Field
-                style={form.textArea}
-                placeholder="Avg. Monthly Power Bill"
-                {...formik.getFieldProps("avgBill")}
-              />
-            </ListItem>
+        <Form
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+            width: "100%",
+          }}
+        >
+          <Field
+            style={form.textArea}
+            placeholder="Avg. Monthly Power Bill"
+            {...formik.getFieldProps("avgBill")}
+          />
 
-            <ListItem>
-              <Field
-                style={form.textArea}
-                placeholder="Address"
-                {...formik.getFieldProps("address")}
-              />
-            </ListItem>
+          <Field
+            style={form.textArea}
+            placeholder="Address"
+            {...formik.getFieldProps("address")}
+          />
 
-            <ListItem>
-              <Field
-                style={form.textArea}
-                placeholder="City"
-                {...formik.getFieldProps("city")}
-              />
-            </ListItem>
+          <Field
+            style={form.textArea}
+            placeholder="City"
+            {...formik.getFieldProps("city")}
+          />
 
-            <ListItem>
-              <Field
-                style={form.textArea}
-                placeholder="State"
-                {...formik.getFieldProps("state")}
-              />
-            </ListItem>
+          <Field
+            style={form.textArea}
+            placeholder="State"
+            {...formik.getFieldProps("state")}
+          />
 
-            <Button style={form.buttonStyles} type="submit">
-              <Typography> Let's get started</Typography>
-            </Button>
-          </List>
+          <Button style={form.buttonStyles} type="submit">
+            <Typography> Let's get started</Typography>
+          </Button>
         </Form>
       </FormikProvider>
     </div>

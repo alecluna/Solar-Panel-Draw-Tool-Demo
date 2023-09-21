@@ -18,8 +18,7 @@ const form: FormStyles = {
     marginBottom: "10px",
     font: "16px Arial, Helvetica, sans-serif",
     height: "45px",
-    maxWidth: "500px",
-    width: "450px",
+    maxWidth: "100%",
   },
   buttonStyles: {
     display: "inline-block",
@@ -39,9 +38,15 @@ const form: FormStyles = {
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "column",
+    margin: "24px",
+    maxWidth: "100%",
   },
   formatErrors: {
-    padding: "0px 20px 5px 20px",
+    paddingTop: "10px",
+    paddingBottom: "10px",
+    justifyContent: "flex-start",
+    alignContent: "flex-start",
+    textAlign: "left",
   },
 };
 
