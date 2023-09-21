@@ -48,6 +48,7 @@ const HomePage: React.FC<SubmitAddressInfoProps> = ({
           // overflow: "hidden",
           maxWidth: "fit-content",
           margin: "48px auto",
+          height: "80vh",
         }}
       >
         {/* <Divider style={{ margin: "24px 24px", width: "70%" }} /> */}

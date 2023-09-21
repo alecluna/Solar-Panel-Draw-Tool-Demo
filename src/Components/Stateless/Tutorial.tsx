@@ -6,7 +6,8 @@ const Tutorial = () => (
       src={tutorial}
       alt="tutorial"
       style={{
-        maxWidth: "450px",
+        maxWidth: "100%",
+        maxHeight: "50%",
         borderRadius: 10,
         boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
       }}
