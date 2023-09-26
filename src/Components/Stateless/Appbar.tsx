@@ -9,7 +9,7 @@ const DrawToolAppBar: React.FC = () => {
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex flex-shrink-0 items-center">
               <img
-                className="h-8 w-auto"
+                style={{ width: "40px", height: "40px" }}
                 src={solarPanel}
                 alt="Solar panel draw tool"
               />
