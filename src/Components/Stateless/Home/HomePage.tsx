@@ -21,6 +21,10 @@ const HomePage: React.FC<SubmitAddressInfoProps> = ({
         updateAveragePowerBill={updateAveragePowerBill}
         updateLocation={updateLocation}
       />
+      <p className="antialiased	text-lg text-slate-800 pt-8">
+        Note: Since this is a demo, no info is being stored, showing this off
+        because I think it is cool.
+      </p>
     </div>
   </div>
 );

@@ -298,11 +298,12 @@ const LoanInfo: React.FC<LoanInfoProps> = ({
           <Typography
             color="textSecondary"
             style={{ textDecoration: "none", fontSize: "1em" }}
-          >
+          ></Typography>
+          <p className="antialiased	text-lg text-slate-800 pt-8">
             Disclosure: This is just a demo version of the product I built for a
             client! I'm not storing any info or keeping any data, just wanted to
             show off this cool tool :D{" "}
-          </Typography>
+          </p>
 
           <Button onClick={handleClose} color="primary">
             Close
