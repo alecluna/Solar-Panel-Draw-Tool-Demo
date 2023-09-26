@@ -11,8 +11,12 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import ErrorDialog from "./Stateless/ErrorDialog";
 
 type UpdateAveragePowerBill = (averagePowerBill: number) => void;
+interface ContainerProps {
+  showMapBox: boolean;
+  setShowMapBox: (showMapBox: boolean) => void;
+}
 
-const Container = () => {
+const Container: React.FC<ContainerProps> = ({ showMapBox, setShowMapBox }) => {
   const [openLoanInfo, setOpenLoanInfo] = useState<boolean>(false);
   const [lat, setLat] = useState<number>(0);
   const [lng, setLng] = useState<number>(0);
@@ -25,7 +29,6 @@ const Container = () => {
   const [offSetPowerbillPrice, setOffSetPowerbillPrice] = useState(0);
   const [errorDialogOpen, setErrorDialogOpen] = useState<boolean>(false);
   const [isLoading, setLoading] = useState(false);
-  const [showMapBox, setShowMapBox] = useState(false);
 
   const toggleOpenLoanInfo = () => {
     setOpenLoanInfo(!openLoanInfo);

@@ -1,6 +1,6 @@
 import solarPanel from "./../../assets/solar-panel-svgrepo-com.svg";
 
-const DrawToolAppBar: React.FC = () => {
+const DrawToolAppBar: React.FC = ({ setShowMapBox }) => {
   return (
     <>
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -9,9 +9,12 @@ const DrawToolAppBar: React.FC = () => {
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex flex-shrink-0 items-center">
               <img
-                style={{ width: "40px", height: "40px" }}
+                style={{ width: "40px", height: "40px", cursor: "pointer" }}
                 src={solarPanel}
                 alt="Solar panel draw tool"
+                onClick={() => {
+                  setShowMapBox(false);
+                }}
               />
             </div>
             <div className="hidden sm:ml-6 sm:block"></div>
