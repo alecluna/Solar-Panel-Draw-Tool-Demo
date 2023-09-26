@@ -1,6 +1,10 @@
 import solarPanel from "./../../assets/solar-panel-svgrepo-com.svg";
 
-const DrawToolAppBar: React.FC = ({ setShowMapBox }) => {
+interface DrawToolAppBarProps {
+  setShowMapBox: (showMapBox: boolean) => void;
+}
+
+const DrawToolAppBar: React.FC<DrawToolAppBarProps> = ({ setShowMapBox }) => {
   return (
     <>
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">

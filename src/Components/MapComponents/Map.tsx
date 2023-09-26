@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useCallback } from "react";
 import {
   Autocomplete,
   DrawingManagerF,
@@ -7,7 +7,7 @@ import {
   useJsApiLoader,
   Libraries,
 } from "@react-google-maps/api";
-import deleteIcon from "../../assets/remove.png";
+
 import ErrorDialog from "../Stateless/ErrorDialog";
 
 interface LatLng {
@@ -36,6 +36,8 @@ const Map: React.FC<MapTypes> = ({
   const autocompleteRef = useRef<unknown>();
   const drawingManagerRef = useRef();
 
+  const [map, setMap] = useState(null);
+  const [isDrawing, setIsDrawing] = useState(false);
   const [polygons, setPolygons] = useState<LatLng[][]>([
     [
       { lat: undefined, lng: undefined },
@@ -68,13 +70,19 @@ const Map: React.FC<MapTypes> = ({
 
   const containerStyle = {
     width: "100vw",
-    height: "calc(100vh - 48px)",
+    height: "calc(100vh - 64px)",
+  };
+
+  const buttonStyles = {
+    position: "absolute",
+    top: "20px",
+    width: "100%",
   };
 
   const autocompleteStyle = {
     boxSizing: "border-box",
     border: "1px solid transparent",
-    width: "240px",
+    width: "180px",
     height: "38px",
     padding: "0 12px",
     borderRadius: "3px",
@@ -82,23 +90,6 @@ const Map: React.FC<MapTypes> = ({
     fontSize: "14px",
     outline: "none",
     textOverflow: "ellipses",
-    position: "absolute",
-    right: "8%",
-    top: "11px",
-    marginLeft: "-120px",
-  };
-
-  const deleteIconStyle = {
-    cursor: "pointer",
-    backgroundImage: `url(${deleteIcon})`,
-    height: "24px",
-    width: "24px",
-    marginTop: "5px",
-    backgroundColor: "#fff",
-    position: "absolute",
-    top: "2px",
-    left: "52%",
-    zIndex: 10,
   };
 
   const polygonOptions = {
@@ -114,23 +105,46 @@ const Map: React.FC<MapTypes> = ({
     streetViewControl: false,
     fullscreenControl: false,
     gestureHandling: "greedy",
-    // mapTypeId: mapRef.current.MapTypeId.SATELLITE,
+    mapTypeId: window?.google?.maps?.MapTypeId?.SATELLITE || "satellite",
+    mapTypeControl: false,
+    tilt: 0,
+    rotateControl: false,
   };
 
   const drawingManagerOptions = {
     polygonOptions: polygonOptions,
-    drawingControl: true,
+    drawingControl: false,
     drawingControlOptions: {
       position: window.google?.maps?.ControlPosition?.TOP_CENTER,
       drawingModes: [window.google?.maps?.drawing?.OverlayType?.POLYGON],
     },
   };
 
-  const onLoadMap = (map: object) => {
-    mapRef.current = map;
-    // console.log("on loaded map: ", map);
-    // map.setMapTypeId(map.MapTypeId.SATELLITE);
+  const toggleDrawMode = () => {
+    const curDrawingState = isDrawing;
+    setIsDrawing(!isDrawing);
+
+    drawingManagerRef?.current?.setDrawingMode(
+      !curDrawingState ? window.google.maps.drawing.OverlayType.POLYGON : null
+    );
   };
+
+  const onLoadMap = useCallback(
+    (map: any) => {
+      mapRef.current = map;
+
+      const bounds = new window.google.maps.LatLngBounds(center);
+      map.fitBounds(bounds);
+
+      setMap(map);
+    },
+
+    [center]
+  );
+
+  const onLoadDrawingManager = useCallback((drawingManager: any) => {
+    drawingManagerRef.current = drawingManager;
+  }, []);
 
   const onLoadPolygon: (polygon: PolygonType, index: number) => void = (
     polygon: PolygonType,
@@ -143,23 +157,21 @@ const Map: React.FC<MapTypes> = ({
     activePolygonIndex.current = index;
   };
 
-  const onLoadAutocomplete = (autocomplete) => {
+  const onLoadAutocomplete = useCallback((autocomplete) => {
     autocompleteRef.current = autocomplete;
-  };
+  }, []);
 
   const onPlaceChanged = () => {
     const { geometry } = autocompleteRef.current.getPlace();
+
     const bounds = new window.google.maps.LatLngBounds();
-    if (geometry.viewport) {
+    if (geometry?.viewport) {
       bounds.union(geometry.viewport);
     } else {
       bounds.extend(geometry.location);
     }
-    mapRef.current.fitBounds(bounds);
-  };
 
-  const onLoadDrawingManager = (drawingManager) => {
-    drawingManagerRef.current = drawingManager;
+    mapRef.current.fitBounds(bounds);
   };
 
   // Q what does this function do?
@@ -193,11 +205,7 @@ const Map: React.FC<MapTypes> = ({
   };
 
   const onDeleteDrawing = () => {
-    const filtered = polygons.filter(
-      (polygon, index) => index !== activePolygonIndex.current
-    );
-
-    setPolygons(filtered);
+    setPolygons([]);
   };
 
   const onEditPolygon = (index) => {
@@ -215,6 +223,10 @@ const Map: React.FC<MapTypes> = ({
     }
   };
 
+  const onUnmount = useCallback((map) => {
+    setMap(null);
+  }, []);
+
   if (loadError) {
     return (
       <ErrorDialog
@@ -228,20 +240,14 @@ const Map: React.FC<MapTypes> = ({
 
   return isLoaded ? (
     <div className="map-container" style={{ position: "relative" }}>
-      {drawingManagerRef.current && (
-        <div
-          onClick={onDeleteDrawing}
-          title="Delete shape"
-          style={deleteIconStyle}
-        ></div>
-      )}
       <GoogleMap
-        zoom={15}
-        center={center}
+        zoom={20}
         onLoad={onLoadMap}
+        onUnmount={onUnmount}
         mapContainerStyle={containerStyle}
         onTilesLoaded={() => setCenter(null)}
         options={googleMapOptions}
+        mapTypeId={google.maps.MapTypeId.SATELLITE}
       >
         <DrawingManagerF
           onLoad={onLoadDrawingManager}
@@ -263,16 +269,45 @@ const Map: React.FC<MapTypes> = ({
             />
           );
         })}
-        <Autocomplete
-          onLoad={onLoadAutocomplete}
-          onPlaceChanged={onPlaceChanged}
-        >
-          <input
-            type="text"
-            placeholder="Search New Location"
-            style={autocompleteStyle}
-          />
-        </Autocomplete>
+
+        <div style={buttonStyles}>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              margin: 12,
+            }}
+          >
+            <button
+              className="transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-100 duration-300 max-[500px]:w-1/3 w-1/6 bg-blue-500 hover:bg-blue-900 text-white font-bold py-2 px-2 border border-blue-700 rounded"
+              onClick={() => toggleDrawMode()}
+            >
+              Draw Mode is turned: {isDrawing ? "ON" : "OFF"}
+            </button>
+            <button
+              className="transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-100 duration-300 max-[500px]:w-1/3 w-1/6 bg-blue-500 hover:bg-blue-900 text-white font-bold py-2 px-2 border border-blue-700 rounded"
+              onClick={onDeleteDrawing}
+              title="Delete shape"
+            >
+              {" "}
+              Delete Drawings
+            </button>
+
+            <Autocomplete
+              onLoad={onLoadAutocomplete}
+              onPlaceChanged={onPlaceChanged}
+            >
+              <input
+                type="text"
+                placeholder="Search New Location"
+                style={autocompleteStyle}
+              />
+            </Autocomplete>
+          </div>
+        </div>
       </GoogleMap>
     </div>
   ) : (
