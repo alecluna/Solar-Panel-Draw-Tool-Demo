@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-// import { makeStyles } from "@material-ui/core/styles";
 import { AWS_LAMBDA_URL, GOOGLE_MAPS_LOCATION_URL } from "./Utils/constants";
 import LoanInfo from "./Stateless/LoanInfo";
 
@@ -10,15 +9,10 @@ import "../Styles/animation.css";
 
 import CircularProgress from "@material-ui/core/CircularProgress";
 import ErrorDialog from "./Stateless/ErrorDialog";
-// import { containerStyles } from "../Styles/containerStyles";
-
-// const useStyles = makeStyles(() => ({ ...containerStyles }));
 
 type UpdateAveragePowerBill = (averagePowerBill: number) => void;
 
 const Container = () => {
-  // const classes = useStyles();
-
   const [openLoanInfo, setOpenLoanInfo] = useState<boolean>(false);
   const [lat, setLat] = useState<number>(0);
   const [lng, setLng] = useState<number>(0);
@@ -142,17 +136,15 @@ const Container = () => {
   }
 
   return (
-    <>
-      <main>
+    <div className="h-full w-full">
+      <main className="md:w-auto">
         {showMapBox ? (
-          <div style={{ marginTop: "48px" }}>
-            <Map
-              center={{ lat, lng }}
-              onUpdateSquareFootage={onUpdateSquareFootage}
-              errorDialogOpen={errorDialogOpen}
-              setErrorDialogOpen={setErrorDialogOpen}
-            />
-          </div>
+          <Map
+            center={{ lat, lng }}
+            onUpdateSquareFootage={onUpdateSquareFootage}
+            errorDialogOpen={errorDialogOpen}
+            setErrorDialogOpen={setErrorDialogOpen}
+          />
         ) : (
           <HomePage
             updateAveragePowerBill={updateAveragePowerBill}
@@ -183,7 +175,7 @@ const Container = () => {
         averagePowerBill={averagePowerBill}
         offSetPowerbillPrice={offSetPowerbillPrice}
       />
-    </>
+    </div>
   );
 };
 

@@ -13,56 +13,16 @@ interface SubmitAddressInfoProps {
 const HomePage: React.FC<SubmitAddressInfoProps> = ({
   updateAveragePowerBill,
   updateLocation,
-}) => {
-  return (
-    <>
-      {/* <StyledContainer>
-        <BackgroundImage>
-          <StyledOverlay>
-            <HeaderText>
-              <Typography align="center" variant="h3">
-                Welcome to
-              </Typography>
-              <Typography align="center" variant="h3" style={{}}>
-                {" "}
-                My Solar Cost
-              </Typography>
-              <ToolDirections />
-              <Button onClick={() => null}>Click Here to Get Started</Button>
-            </HeaderText>
-
-            <div style={{ marginTop: "4em" }}>
-              <SolarImage src={solarCanva} alt="solar neighborhood" />
-            </div>
-          </StyledOverlay>
-        </BackgroundImage>
-      </StyledContainer> */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          flexWrap: "wrap",
-          justifyContent: "space-evenly",
-          flexDirection: "row",
-          // height: "100vh",
-          // overflow: "hidden",
-          maxWidth: "fit-content",
-          margin: "48px auto",
-          height: "100vh",
-        }}
-      >
-        {/* <Divider style={{ margin: "24px 24px", width: "70%" }} /> */}
-
-        <HowToUse />
-        {/* <Divider style={{ margin: "24px 24px", width: "70%" }} /> */}
-
-        <SubmitAddressInfo
-          updateAveragePowerBill={updateAveragePowerBill}
-          updateLocation={updateLocation}
-        />
-      </div>
-    </>
-  );
-};
+}) => (
+  <div className="sm:pt-24 flex justify-center mx-auto content-centercenter align-middle mx-auto bg-white lg:max-w-2xl p-4">
+    <div id="how-to-use" className="flex flex-col">
+      <HowToUse />
+      <SubmitAddressInfo
+        updateAveragePowerBill={updateAveragePowerBill}
+        updateLocation={updateLocation}
+      />
+    </div>
+  </div>
+);
 
 export default HomePage;

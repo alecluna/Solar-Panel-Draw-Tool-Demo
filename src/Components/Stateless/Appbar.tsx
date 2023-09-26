@@ -1,31 +1,26 @@
-import { AppBar, CssBaseline, Toolbar, Typography } from "@material-ui/core";
+import solarPanel from "./../../assets/solar-panel-svgrepo-com.svg";
 
-type AppBar = Record<string, string> | undefined;
-interface DrawToolAppBarProps {
-  classes: AppBar;
-}
-const DrawToolAppBar: React.FC<DrawToolAppBarProps> = ({ classes }) => {
+const DrawToolAppBar: React.FC = () => {
   return (
     <>
-      <CssBaseline />
-      <AppBar
-        elevation={0}
-        position="fixed"
-        color="default"
-        className={classes?.appBar}
-      >
-        <Toolbar className="toolbar" variant="dense">
-          <Typography
-            className="my-first-step"
-            style={{ flex: 1 }}
-            variant="h6"
-            noWrap
-          >
-            My Solar Cost
-          </Typography>{" "}
-          <Typography>Demo version</Typography>
-        </Toolbar>
-      </AppBar>
+      <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+        <div className="relative flex h-16 items-center justify-between">
+          <div className="absolute inset-y-0 left-0 flex items-center sm:hidden"></div>
+          <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+            <div className="flex flex-shrink-0 items-center">
+              <img
+                className="h-8 w-auto"
+                src={solarPanel}
+                alt="Solar panel draw tool"
+              />
+            </div>
+            <div className="hidden sm:ml-6 sm:block"></div>
+          </div>
+          <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+            <p className="text-xl text-black font-medium">This is a Demo</p>
+          </div>
+        </div>
+      </div>
     </>
   );
 };

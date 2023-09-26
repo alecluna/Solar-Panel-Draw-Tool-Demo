@@ -5,12 +5,7 @@ const Tutorial = () => (
     <img
       src={tutorial}
       alt="tutorial"
-      style={{
-        maxWidth: "100%",
-        maxHeight: "50%",
-        borderRadius: 10,
-        boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-      }}
+      className="max-w-full max-h-1/2 rounded-lg shadow-lg"
     />
   </>
 );

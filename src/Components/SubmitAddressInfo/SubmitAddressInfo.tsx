@@ -1,7 +1,5 @@
 import { useFormik, Form, Field, FormikProvider } from "formik";
 import * as yup from "yup";
-import { Typography, List, ListItem, Button } from "@material-ui/core";
-import form from "../../Styles/form";
 
 type UpdateAveragePowerBill = (averagePowerBill: number) => void;
 
@@ -95,63 +93,57 @@ const SubmitAddressInfo: React.FC<SubmitAddressInfoProps> = ({
   };
 
   return (
-    <div style={form.formatList}>
-      <div>
-        <Typography
-          variant="h5"
-          color="textPrimary"
-          style={{ fontWeight: "bold", marginBottom: 24 }}
-        >
-          {" "}
+    <div className="flex flex-col">
+      <div className="pt-8">
+        <p className="antialiased	text-xl	font-semibold text-slate-800 pb-2">
           Start here by locating your property{" "}
-        </Typography>
-        <Typography variant="h6" color="textPrimary">
+        </p>
+        <p className="antialiased	text-lg text-slate-800 pb-8">
           <strong>Note:</strong> Do not include gas usage in your average bill.
-        </Typography>
+        </p>
       </div>
 
       <div style={{ display: "flex", width: "100%" }}>
-        <Typography color="error" style={form.formatErrors}>
-          {getErrors()}
-        </Typography>
+        <p className="text-red-700 pb-4">{getErrors()}</p>
       </div>
 
       <FormikProvider value={formik}>
-        <Form
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            flexDirection: "column",
-            width: "100%",
-          }}
-        >
+        <Form>
           <Field
-            style={form.textArea}
+            className="block flex-1 border-0 bg-transparent py-1.5 pl-1 pt-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-lg sm:leading-6"
             placeholder="Avg. Monthly Power Bill"
+            type="text"
             {...formik.getFieldProps("avgBill")}
           />
 
           <Field
-            style={form.textArea}
+            className="block flex-1 border-0 bg-transparent py-1.5 pl-1 pt-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-lg sm:leading-6"
             placeholder="Address"
             {...formik.getFieldProps("address")}
           />
 
           <Field
-            style={form.textArea}
+            className="block flex-1 border-0 bg-transparent py-1.5 pl-1 pt-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-lg sm:leading-6"
             placeholder="City"
             {...formik.getFieldProps("city")}
           />
 
           <Field
-            style={form.textArea}
+            className="block flex-1 border-0 bg-transparent py-1.5 pl-1 pt-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-lg sm:leading-6"
             placeholder="State"
             {...formik.getFieldProps("state")}
           />
 
-          <Button style={form.buttonStyles} type="submit">
-            <Typography> Let's get started</Typography>
-          </Button>
+          <div className="pt-8">
+            <button
+              type="submit"
+              className="max-[600px]:w-full md:w-1/2 bg-blue-500 hover:bg-blue-900 text-white font-bold py-2 px-4 border border-blue-700 rounded"
+            >
+              <p className="antialiased	text-md text-slate-100">
+                Let's get started
+              </p>
+            </button>
+          </div>
         </Form>
       </FormikProvider>
     </div>
