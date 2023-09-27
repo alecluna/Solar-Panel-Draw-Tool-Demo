@@ -47,8 +47,9 @@ const Container: React.FC<ContainerProps> = ({ showMapBox, setShowMapBox }) => {
     }
   };
 
+  /* fake loading time */
   const updateLocation = (location: string) => {
-    getLocationFromGoogleAPI(location);
+    setTimeout(() => getLocationFromGoogleAPI(location), 1500);
   };
 
   const updateAveragePowerBill: UpdateAveragePowerBill = (

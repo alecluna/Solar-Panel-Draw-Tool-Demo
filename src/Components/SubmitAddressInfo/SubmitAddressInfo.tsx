@@ -98,12 +98,12 @@ const SubmitAddressInfo: React.FC<SubmitAddressInfoProps> = ({
         <p className="antialiased	text-xl	font-semibold text-slate-800 pb-2">
           Start here by locating your property{" "}
         </p>
-        <p className="antialiased	text-lg text-slate-800 pb-8">
+        <p className="antialiased	text-lg text-slate-800 pb-6">
           <strong>Note:</strong> Do not include gas usage in your average bill.
         </p>
       </div>
 
-      <div style={{ display: "flex", width: "100%" }}>
+      <div className="h-8">
         <p className="text-red-700 pb-4">{getErrors()}</p>
       </div>
 

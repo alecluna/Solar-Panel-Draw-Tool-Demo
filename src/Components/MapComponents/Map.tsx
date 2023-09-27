@@ -79,19 +79,6 @@ const Map: React.FC<MapTypes> = ({
     width: "100%",
   };
 
-  const autocompleteStyle = {
-    boxSizing: "border-box",
-    border: "1px solid transparent",
-    width: "180px",
-    height: "38px",
-    padding: "0 12px",
-    borderRadius: "3px",
-    boxShadow: "0 2px 6px rgba(0, 0, 0, 0.3)",
-    fontSize: "14px",
-    outline: "none",
-    textOverflow: "ellipses",
-  };
-
   const polygonOptions = {
     fillOpacity: 0.3,
     fillColor: "#ff0000",
@@ -270,22 +257,13 @@ const Map: React.FC<MapTypes> = ({
           );
         })}
 
-        <div style={buttonStyles}>
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              margin: 12,
-            }}
-          >
+        <div className="absolute top-20 w-full">
+          <div className="flex flex-wrap flex-row justify-between items-center m-12">
             <button
-              className="transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-100 duration-300 max-[500px]:w-1/3 w-1/6 bg-blue-500 hover:bg-blue-900 text-white font-bold py-2 px-2 border border-blue-700 rounded"
+              className="transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-100 duration-300 max-[600px]:w-full w-1/4 bg-blue-500 hover:bg-blue-900 text-white font-bold py-2 px-2 border border-blue-700 rounded mb-2"
               onClick={() => toggleDrawMode()}
             >
-              Draw Mode is turned: {isDrawing ? "ON" : "OFF"}
+              Draw Mode: {isDrawing ? "ON" : "OFF"}
             </button>
 
             <Autocomplete
@@ -295,21 +273,14 @@ const Map: React.FC<MapTypes> = ({
               <input
                 type="text"
                 placeholder="Search New Location"
-                className="focus:-translate-y-1 focus:scale-100 duration-300 placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                className="focus:-translate-y-1 focus:scale-100 duration-300 w-full placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-4 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm mb-2"
               />
             </Autocomplete>
           </div>
         </div>
-        <div
-          style={{
-            position: "absolute",
-            left: "45%",
-            bottom: "50px",
-            width: "100%",
-          }}
-        >
+        <div className=" flex flex-wrap flex-row justify-center items-center m-12 max-[600px]:bottom-24 absolute bottom-14 w-full">
           <button
-            className="transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-100 duration-300 max-[500px]:w-1/3 w-1/6 bg-blue-500 hover:bg-blue-900 text-white font-bold py-2 px-2 border border-blue-700 rounded"
+            className="transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-100 duration-300 max-[600px]:w-1/2 max-[400px]:w-full w-1/6 bg-blue-500 hover:bg-blue-900 text-white font-bold py-2 px-2 border border-blue-700 rounded"
             onClick={onDeleteDrawing}
             title="Delete shape"
           >
