@@ -158,11 +158,12 @@ const Container: React.FC<ContainerProps> = ({ showMapBox, setShowMapBox }) => {
           <HomePage
             updateAveragePowerBill={updateAveragePowerBill}
             updateLocation={updateLocation}
+            isLoading={isLoading}
           />
         )}
       </main>
 
-      {isLoading && (
+      {isLoading && showMapBox && (
         <div
           style={{
             position: "absolute",

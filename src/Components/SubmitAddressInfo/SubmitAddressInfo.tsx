@@ -1,25 +1,12 @@
 import { useFormik, Form, Field, FormikProvider } from "formik";
 import * as yup from "yup";
-
-type UpdateAveragePowerBill = (averagePowerBill: number) => void;
-
-type UpdateLocation = (location: Partial<string>) => void;
-
-interface SubmitAddressInfoProps {
-  updateAveragePowerBill: UpdateAveragePowerBill;
-  updateLocation: UpdateLocation;
-}
-
-interface Values {
-  avgBill: string;
-  address: string;
-  city: string;
-  state: string;
-}
+import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
+import { Values, SubmitAddressInfoProps } from "./types";
 
 const SubmitAddressInfo: React.FC<SubmitAddressInfoProps> = ({
   updateAveragePowerBill,
   updateLocation,
+  isLoading,
 }) => {
   const formik = useFormik({
     initialValues: {
@@ -134,7 +121,7 @@ const SubmitAddressInfo: React.FC<SubmitAddressInfoProps> = ({
             {...formik.getFieldProps("state")}
           />
 
-          <div className="pt-8">
+          <div className="pt-8 flex flex-direction-col flex-bases-0">
             <button
               type="submit"
               className="max-[600px]:w-full md:w-1/2 bg-blue-500 hover:bg-blue-900 text-white font-bold py-2 px-4 border border-blue-700 rounded"
@@ -143,6 +130,7 @@ const SubmitAddressInfo: React.FC<SubmitAddressInfoProps> = ({
                 Let's get started
               </p>
             </button>
+            {isLoading && <LoadingSpinner />}
           </div>
         </Form>
       </FormikProvider>

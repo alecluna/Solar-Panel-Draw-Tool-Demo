@@ -1,4 +1,5 @@
 type UpdateAveragePowerBill = (averagePowerBill: number) => void;
+
 type UpdateLocation = (location: Partial<string>) => void;
 
 interface SubmitAddressInfoProps {
@@ -7,4 +8,11 @@ interface SubmitAddressInfoProps {
   isLoading: boolean;
 }
 
-export type { UpdateAveragePowerBill, UpdateLocation, SubmitAddressInfoProps };
+interface Values {
+  avgBill: string;
+  address: string;
+  city: string;
+  state: string;
+}
+
+export type { Values, SubmitAddressInfoProps };
