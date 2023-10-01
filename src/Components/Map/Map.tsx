@@ -1,5 +1,13 @@
 import { useRef, useState, useCallback } from "react";
 import {
+  LatLng,
+  MapPropTypes,
+  PolygonType,
+  OverlayEvent,
+  DrawingManager,
+} from "./types";
+
+import {
   Autocomplete,
   DrawingManagerF,
   GoogleMap,
@@ -7,34 +15,23 @@ import {
   useJsApiLoader,
   Libraries,
 } from "@react-google-maps/api";
-
 import ErrorDialog from "../Stateless/ErrorDialog";
 
-interface LatLng {
-  lat: number | undefined;
-  lng: number | undefined;
+interface KeyboardEvent {
+  keycode: boolean;
 }
 
-type PolygonType = LatLng[];
-
-interface MapTypes {
-  center: LatLng;
-  errorDialogOpen: boolean;
-  onUpdateSquareFootage: (area: number) => void;
-  setErrorDialogOpen: (isOpen: boolean) => void;
-}
-
-const Map: React.FC<MapTypes> = ({
+const Map: React.FC<MapPropTypes> = ({
   center: { lat: latitude, lng: longitude },
   errorDialogOpen,
   setErrorDialogOpen,
   onUpdateSquareFootage,
 }) => {
-  const mapRef = useRef<unknown>();
-  const polygonRefs = useRef<unknown[]>([]);
+  const mapRef = useRef();
+  const polygonRefs = useRef<PolygonType[]>([]);
   const activePolygonIndex = useRef<number | undefined>();
   const autocompleteRef = useRef<unknown>();
-  const drawingManagerRef = useRef();
+  const drawingManagerRef = useRef<DrawingManager>();
 
   const [map, setMap] = useState(null);
   const [isDrawing, setIsDrawing] = useState(false);
@@ -54,11 +51,12 @@ const Map: React.FC<MapTypes> = ({
     ],
   ]);
 
-  const defaultCenter = {
+  const defaultCenter: LatLng = {
     lat: latitude,
     lng: longitude,
   };
-  const [center, setCenter] = useState(defaultCenter);
+
+  const [center, setCenter] = useState<LatLng>(defaultCenter);
   const [libraries] = useState<Libraries>(["places", "drawing", "geometry"]);
 
   const { isLoaded, loadError } = useJsApiLoader({
@@ -71,12 +69,6 @@ const Map: React.FC<MapTypes> = ({
   const containerStyle = {
     width: "100vw",
     height: "calc(100vh - 64px)",
-  };
-
-  const buttonStyles = {
-    position: "absolute",
-    top: "20px",
-    width: "100%",
   };
 
   const polygonOptions = {
@@ -107,7 +99,7 @@ const Map: React.FC<MapTypes> = ({
     },
   };
 
-  const toggleDrawMode = () => {
+  const toggleDrawMode = (): void => {
     const curDrawingState = isDrawing;
     setIsDrawing(!isDrawing);
 
@@ -117,21 +109,26 @@ const Map: React.FC<MapTypes> = ({
   };
 
   const onLoadMap = useCallback(
-    (map: any) => {
+    (map) => {
+      console.log("map: ", map);
       mapRef.current = map;
 
-      const bounds = new window.google.maps.LatLngBounds(center);
-      map.fitBounds(bounds);
-
-      setMap(map);
+      if (center) {
+        const bounds = new window.google.maps.LatLngBounds(center);
+        map.fitBounds(bounds);
+        setMap(map);
+      }
     },
 
     [center]
   );
 
-  const onLoadDrawingManager = useCallback((drawingManager: any) => {
-    drawingManagerRef.current = drawingManager;
-  }, []);
+  const onLoadDrawingManager = useCallback(
+    (drawingManager: DrawingManager): void => {
+      drawingManagerRef.current = drawingManager;
+    },
+    []
+  );
 
   const onLoadPolygon: (polygon: PolygonType, index: number) => void = (
     polygon: PolygonType,
@@ -140,15 +137,18 @@ const Map: React.FC<MapTypes> = ({
     polygonRefs.current[index] = polygon;
   };
 
-  const onClickPolygon = (index) => {
+  const onClickPolygon = (index: number): void => {
     activePolygonIndex.current = index;
   };
 
-  const onLoadAutocomplete = useCallback((autocomplete) => {
+  const onLoadAutocomplete = useCallback((autocomplete: string): void => {
+    console.log(autocomplete);
     autocompleteRef.current = autocomplete;
   }, []);
 
-  const onPlaceChanged = () => {
+  const onPlaceChanged = (): void => {
+    if (autocompleteRef.current === undefined) return;
+
     const { geometry } = autocompleteRef.current.getPlace();
 
     const bounds = new window.google.maps.LatLngBounds();
@@ -158,24 +158,27 @@ const Map: React.FC<MapTypes> = ({
       bounds.extend(geometry.location);
     }
 
-    mapRef.current.fitBounds(bounds);
+    mapRef?.current?.fitBounds(bounds);
   };
 
   // Q what does this function do?
-  const onOverlayComplete = (overlayEvent) => {
-    drawingManagerRef.current.setDrawingMode(null);
-    // console.log(
-    //   "overlayEvent.overlay: ",
-    //   overlayEvent.overlay.getPath().getArray()
-    // );
+  const onOverlayComplete = (e: KeyboardEvent, overlayEvent: OverlayEvent) => {
+    console.log("overlayEvent: ", overlayEvent);
+    drawingManagerRef?.current?.setDrawingMode(null);
+
+    if (e.keycode === 27) {
+      drawingManagerRef?.current?.setDrawingMode(null);
+      return;
+    }
+
     if (overlayEvent.type === window.google.maps.drawing.OverlayType.POLYGON) {
-      const newPolygon = overlayEvent.overlay
+      const newPolygon = overlayEvent?.overlay
         .getPath()
         .getArray()
-        .map((latLng: any) => ({
-          lat: latLng.lat(),
-          lng: latLng.lng(),
-        }));
+        .map((latLng: LatLng) => {
+          console.log("latLng: ", latLng);
+          return { lat: latLng.lat(), lng: latLng.lng() };
+        });
 
       const area =
         window.google.maps.geometry.spherical.computeArea(newPolygon);
@@ -191,11 +194,12 @@ const Map: React.FC<MapTypes> = ({
     }
   };
 
-  const onDeleteDrawing = () => {
+  const onDeleteDrawing = (): void => {
     setPolygons([]);
+    setIsDrawing(false);
   };
 
-  const onEditPolygon = (index) => {
+  const onEditPolygon = (index: number) => {
     const polygonRef = polygonRefs.current[index];
     if (polygonRef) {
       const coordinates = polygonRef
@@ -258,14 +262,21 @@ const Map: React.FC<MapTypes> = ({
         })}
 
         <div className="absolute top-20 w-full">
-          <div className="flex flex-wrap flex-row justify-between items-center m-12">
+          <div className="flex flex-wrap flex-col items-start m-12">
             <button
-              className="transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-100 duration-300 max-[600px]:w-full w-1/4 bg-blue-500 hover:bg-blue-900 text-white font-bold py-2 px-2 border border-blue-700 rounded mb-2"
+              className="flex-shrink-0 flex-grow-0 w-190 transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-100 duration-300 bg-blue-500 hover:bg-blue-900 text-white font-bold py-2 px-2 border border-blue-700 rounded mb-2"
               onClick={() => toggleDrawMode()}
             >
               Draw Mode: {isDrawing ? "ON" : "OFF"}
             </button>
-
+            <button
+              className="flex-shrink-0 flex-grow-0 w-190 transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-100 duration-300 bg-blue-500 hover:bg-blue-900 text-white font-bold py-2 px-2 border border-blue-700 rounded  mb-2"
+              onClick={onDeleteDrawing}
+              title="Delete shape"
+            >
+              {" "}
+              Delete Drawings
+            </button>
             <Autocomplete
               onLoad={onLoadAutocomplete}
               onPlaceChanged={onPlaceChanged}
@@ -277,16 +288,6 @@ const Map: React.FC<MapTypes> = ({
               />
             </Autocomplete>
           </div>
-        </div>
-        <div className=" flex flex-wrap flex-row justify-center items-center m-12 max-[600px]:bottom-24 absolute bottom-14 w-full">
-          <button
-            className="transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-100 duration-300 max-[600px]:w-1/2 max-[400px]:w-full w-1/6 bg-blue-500 hover:bg-blue-900 text-white font-bold py-2 px-2 border border-blue-700 rounded"
-            onClick={onDeleteDrawing}
-            title="Delete shape"
-          >
-            {" "}
-            Delete Drawings
-          </button>
         </div>
       </GoogleMap>
     </div>

@@ -3,13 +3,13 @@ import { useState } from "react";
 import { AWS_LAMBDA_URL, GOOGLE_MAPS_LOCATION_URL } from "./Utils/constants";
 import LoanInfo from "./Stateless/LoanInfo";
 
-import Map from "./MapComponents/Map";
+import Map from "./Map/Map";
 import HomePage from "./Stateless/Home/HomePage";
-import "../Styles/animation.css";
 
 import CircularProgress from "@material-ui/core/CircularProgress";
 import ErrorDialog from "./Stateless/ErrorDialog";
 
+type URLString = string;
 type UpdateAveragePowerBill = (averagePowerBill: number) => void;
 interface ContainerProps {
   showMapBox: boolean;
@@ -30,11 +30,11 @@ const Container: React.FC<ContainerProps> = ({ showMapBox, setShowMapBox }) => {
   const [errorDialogOpen, setErrorDialogOpen] = useState<boolean>(false);
   const [isLoading, setLoading] = useState(false);
 
-  const toggleOpenLoanInfo = () => {
+  const toggleOpenLoanInfo = (): void => {
     setOpenLoanInfo(!openLoanInfo);
   };
 
-  const updateLatLng = (latitude: number, longitude: number) => {
+  const updateLatLng = (latitude: number, longitude: number): void => {
     const isValidLongitude = longitude >= -180 && longitude <= 180;
     const isValidLatitude = latitude >= -90 && latitude <= 90;
 
@@ -48,17 +48,17 @@ const Container: React.FC<ContainerProps> = ({ showMapBox, setShowMapBox }) => {
   };
 
   /* fake loading time */
-  const updateLocation = (location: string) => {
+  const updateLocation = (location: string): void => {
     setTimeout(() => getLocationFromGoogleAPI(location), 1500);
   };
 
   const updateAveragePowerBill: UpdateAveragePowerBill = (
     averageYearlyPowerBill: number
-  ) => {
+  ): void => {
     setAveragePowerBill(averageYearlyPowerBill);
   };
 
-  const onUpdateSquareFootage = (newSquareFootage: number) => {
+  const onUpdateSquareFootage = (newSquareFootage: number): void => {
     setSquareFootage(newSquareFootage);
 
     if (newSquareFootage > 0) {
@@ -66,9 +66,10 @@ const Container: React.FC<ContainerProps> = ({ showMapBox, setShowMapBox }) => {
     }
   };
 
-  const calculateSystemSize = async (squareFootage: string) => {
-    const url = AWS_LAMBDA_URL;
-    const queryStringURL = `${url}?squareFootage=${squareFootage}&averagePowerBill=${averagePowerBill}`;
+  const calculateSystemSize = async (squareFootage: string): Promise<void> => {
+    const url: URLString = AWS_LAMBDA_URL;
+    const queryStringURL: URLString = `${url}?squareFootage=${squareFootage}&averagePowerBill=${averagePowerBill}`;
+
     setLoading(true);
 
     try {
@@ -101,19 +102,20 @@ const Container: React.FC<ContainerProps> = ({ showMapBox, setShowMapBox }) => {
     toggleOpenLoanInfo();
   };
 
-  const getLocationFromGoogleAPI = async (location: string) => {
-    const url = GOOGLE_MAPS_LOCATION_URL;
-    if (!location || location.length === 0) {
+  const getLocationFromGoogleAPI = async (location: string): Promise<void> => {
+    const url: URLString = GOOGLE_MAPS_LOCATION_URL;
+    const googleMapsAPIURL: URLString = `${url}?address=${encodeURIComponent(
+      location
+    )}&key=${import.meta.env.VITE_GOOGLE_API_KEY}`;
+
+    const checklocation = [];
+    if (checklocation?.length) {
       setErrorDialogOpen(!errorDialogOpen);
       return;
     }
 
     try {
-      const response = await fetch(
-        `${url}?address=${encodeURIComponent(location)}&key=${
-          import.meta.env.VITE_GOOGLE_API_KEY
-        }`
-      );
+      const response = await fetch(googleMapsAPIURL);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }

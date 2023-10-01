@@ -9,7 +9,6 @@ import form from "../../Styles/form";
 import { useFormik, Form, Field, FormikProvider } from "formik";
 import * as yup from "yup";
 import CountUp from "react-countup";
-import "../../Styles/animation.css";
 
 const styles = {
   fontStyles: {

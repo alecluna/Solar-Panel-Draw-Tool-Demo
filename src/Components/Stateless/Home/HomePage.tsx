@@ -1,4 +1,3 @@
-import "../../../Styles/animation.css";
 import SubmitAddressInfo from "../../SubmitAddressInfo/SubmitAddressInfo";
 import HowToUse from "./HowToUse";
 
