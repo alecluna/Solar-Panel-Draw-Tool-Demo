@@ -4,8 +4,8 @@ const HowToUse: React.FC = () => {
   return (
     <>
       <div className="flex flex-col">
-        <h1 className="antialiased text-3xl font-bold text-center pb-6">
-          My Solar Cost Demo Tool
+        <h1 className="antialiased text-3xl font-bold text-start pb-6">
+          My Solar Cost Demo
         </h1>
 
         <p className="antialiased	text-xl	font-semibold text-slate-800 pb-2">

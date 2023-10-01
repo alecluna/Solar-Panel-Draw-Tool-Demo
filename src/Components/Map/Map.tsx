@@ -17,10 +17,6 @@ import {
 } from "@react-google-maps/api";
 import ErrorDialog from "../Dialogs/ErrorDialog";
 
-interface KeyboardEvent {
-  keycode: boolean;
-}
-
 const Map: React.FC<MapPropTypes> = ({
   center: { lat: latitude, lng: longitude },
   errorDialogOpen,
