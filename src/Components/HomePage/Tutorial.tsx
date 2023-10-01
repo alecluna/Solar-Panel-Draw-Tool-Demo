@@ -1,6 +1,6 @@
 import tutorial from "../../assets/tutorial.gif";
 
-const Tutorial = () => (
+const Tutorial: React.FC = () => (
   <>
     <img
       src={tutorial}

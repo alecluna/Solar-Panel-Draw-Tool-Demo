@@ -1,13 +1,12 @@
 import { useState } from "react";
 
 import { AWS_LAMBDA_URL, GOOGLE_MAPS_LOCATION_URL } from "./Utils/constants";
-import LoanInfo from "./Stateless/LoanInfo";
-
+import LoanInfo from "./Graphs/LoanInfo";
+import LoadingSpinner from "./LoadingSpinner/LoadingSpinner";
 import Map from "./Map/Map";
-import HomePage from "./Stateless/Home/HomePage";
+import HomePage from "./HomePage/Home";
 
-import CircularProgress from "@material-ui/core/CircularProgress";
-import ErrorDialog from "./Stateless/ErrorDialog";
+import ErrorDialog from "./Dialogs/ErrorDialog";
 
 type URLString = string;
 type UpdateAveragePowerBill = (averagePowerBill: number) => void;
@@ -28,7 +27,7 @@ const Container: React.FC<ContainerProps> = ({ showMapBox, setShowMapBox }) => {
   const [averagePowerBill, setAveragePowerBill] = useState<number>(0);
   const [offSetPowerbillPrice, setOffSetPowerbillPrice] = useState(0);
   const [errorDialogOpen, setErrorDialogOpen] = useState<boolean>(false);
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState<boolean>(false);
 
   const toggleOpenLoanInfo = (): void => {
     setOpenLoanInfo(!openLoanInfo);
@@ -49,6 +48,8 @@ const Container: React.FC<ContainerProps> = ({ showMapBox, setShowMapBox }) => {
 
   /* fake loading time */
   const updateLocation = (location: string): void => {
+    setLoading(true);
+
     setTimeout(() => getLocationFromGoogleAPI(location), 1500);
   };
 
@@ -128,6 +129,8 @@ const Container: React.FC<ContainerProps> = ({ showMapBox, setShowMapBox }) => {
       console.log("error: ", error);
       setErrorDialogOpen(!errorDialogOpen);
     }
+
+    setLoading(false);
   };
 
   if (errorDialogOpen) {
@@ -167,7 +170,7 @@ const Container: React.FC<ContainerProps> = ({ showMapBox, setShowMapBox }) => {
             left: "50%",
           }}
         >
-          <CircularProgress thickness={4} />
+          <LoadingSpinner />
         </div>
       )}
       <LoanInfo

@@ -1,10 +1,9 @@
 import { useState } from "react";
 import Container from "./Components/Container";
-import DrawToolAppBar from "./Components/Stateless/Appbar";
-// import Footer from "./Components/Stateless/Footer";
+import DrawToolAppBar from "./Components/Appbar/Appbar";
 
-const App = () => {
-  const [showMapBox, setShowMapBox] = useState(false);
+const App: React.FC = () => {
+  const [showMapBox, setShowMapBox] = useState<boolean>(false);
 
   return (
     <>

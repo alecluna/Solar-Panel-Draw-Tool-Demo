@@ -1,15 +1,8 @@
-import SubmitAddressInfo from "../../SubmitAddressInfo/SubmitAddressInfo";
+import SubmitAddressInfo from "../SubmitAddressInfo/SubmitAddressInfo";
 import HowToUse from "./HowToUse";
+import { SubmitAddressInfoProps } from "./types";
 
-type UpdateAveragePowerBill = (averagePowerBill: number) => void;
-type UpdateLocation = (location: Partial<string>) => void;
-
-interface SubmitAddressInfoProps {
-  updateAveragePowerBill: UpdateAveragePowerBill;
-  updateLocation: UpdateLocation;
-}
-
-const HomePage: React.FC<SubmitAddressInfoProps> = ({
+const Home: React.FC<SubmitAddressInfoProps> = ({
   updateAveragePowerBill,
   updateLocation,
 }) => (
@@ -28,4 +21,4 @@ const HomePage: React.FC<SubmitAddressInfoProps> = ({
   </div>
 );
 
-export default HomePage;
+export default Home;

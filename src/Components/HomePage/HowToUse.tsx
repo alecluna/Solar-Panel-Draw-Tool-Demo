@@ -1,6 +1,6 @@
-import Tutorial from "../Tutorial";
+import Tutorial from "./Tutorial";
 
-const HowToUse = () => {
+const HowToUse: React.FC = () => {
   return (
     <>
       <div className="flex flex-col">

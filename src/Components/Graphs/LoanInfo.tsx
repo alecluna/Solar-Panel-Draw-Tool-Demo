@@ -9,8 +9,9 @@ import {
   DialogTitle,
   IconButton,
 } from "@material-ui/core";
+import { LoanInfoProps } from "./types";
 import CountUp from "react-countup";
-import Graph from "../Graphs/Graph";
+import Graph from "./Graph";
 import CloseIcon from "@material-ui/icons/Close";
 import arrow from "../../assets/right-arrow.svg";
 
@@ -37,18 +38,6 @@ const styles = {
     padding: "5px",
   },
 };
-
-interface LoanInfoProps {
-  open: boolean;
-  squareFootage: number | null;
-  handleClose: () => void;
-  loanCost: number;
-  numberOfPanels: number;
-  sysSizeKiloWatts: number;
-  initialCost: number;
-  averagePowerBill: number;
-  offSetPowerbillPrice: number;
-}
 
 const LoanInfo: React.FC<LoanInfoProps> = ({
   open,

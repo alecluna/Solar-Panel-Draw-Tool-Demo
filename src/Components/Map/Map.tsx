@@ -15,7 +15,7 @@ import {
   useJsApiLoader,
   Libraries,
 } from "@react-google-maps/api";
-import ErrorDialog from "../Stateless/ErrorDialog";
+import ErrorDialog from "../Dialogs/ErrorDialog";
 
 interface KeyboardEvent {
   keycode: boolean;
@@ -162,14 +162,14 @@ const Map: React.FC<MapPropTypes> = ({
   };
 
   // Q what does this function do?
-  const onOverlayComplete = (e: KeyboardEvent, overlayEvent: OverlayEvent) => {
+  const onOverlayComplete = (overlayEvent: OverlayEvent) => {
     console.log("overlayEvent: ", overlayEvent);
     drawingManagerRef?.current?.setDrawingMode(null);
 
-    if (e.keycode === 27) {
-      drawingManagerRef?.current?.setDrawingMode(null);
-      return;
-    }
+    // if (e.keycode === 27) {
+    //   drawingManagerRef?.current?.setDrawingMode(null);
+    //   return;
+    // }
 
     if (overlayEvent.type === window.google.maps.drawing.OverlayType.POLYGON) {
       const newPolygon = overlayEvent?.overlay
