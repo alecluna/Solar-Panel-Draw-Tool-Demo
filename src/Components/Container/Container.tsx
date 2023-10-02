@@ -1,22 +1,14 @@
 import { useState } from "react";
-
-import { AWS_LAMBDA_URL, GOOGLE_MAPS_LOCATION_URL } from "./Utils/constants";
-import LoanInfo from "./Graphs/LoanInfo";
-import LoadingSpinner from "./LoadingSpinner/LoadingSpinner";
-import Map from "./Map/Map";
-import HomePage from "./HomePage/Home";
-
-import ErrorDialog from "./Dialogs/ErrorDialog";
-
-type URLString = string;
-type UpdateAveragePowerBill = (averagePowerBill: number) => void;
-interface ContainerProps {
-  showMapBox: boolean;
-  setShowMapBox: (showMapBox: boolean) => void;
-}
+import { AWS_LAMBDA_URL, GOOGLE_MAPS_LOCATION_URL } from "../Utils/constants";
+import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
+import Map from "../Map/Map";
+import HomePage from "../HomePage/Home";
+import ErrorDialog from "../Dialogs/ErrorDialog";
+import { URLString, UpdateAveragePowerBill, ContainerProps } from "./types";
+import LoanContainer from "../Graphs/Loan/LoanContainer";
 
 const Container: React.FC<ContainerProps> = ({ showMapBox, setShowMapBox }) => {
-  const [openLoanInfo, setOpenLoanInfo] = useState<boolean>(false);
+  const [openLoanInfo, setOpenLoanInfo] = useState<boolean>(true);
   const [lat, setLat] = useState<number>(0);
   const [lng, setLng] = useState<number>(0);
   const [squareFootage, setSquareFootage] = useState<number | null>(null);
@@ -136,8 +128,7 @@ const Container: React.FC<ContainerProps> = ({ showMapBox, setShowMapBox }) => {
   if (errorDialogOpen) {
     return (
       <ErrorDialog
-        open={errorDialogOpen}
-        onClose={() => setErrorDialogOpen(!errorDialogOpen)}
+        handleClose={() => setErrorDialogOpen(!errorDialogOpen)}
         title="Error with request"
         message="Whoops, something went wrong with your request, please try again"
       />
@@ -174,8 +165,8 @@ const Container: React.FC<ContainerProps> = ({ showMapBox, setShowMapBox }) => {
           <LoadingSpinner />
         </div>
       )}
-      <LoanInfo
-        open={openLoanInfo}
+      <LoanContainer
+        isOpen={openLoanInfo}
         handleClose={toggleOpenLoanInfo}
         squareFootage={squareFootage}
         loanCost={loanCost}

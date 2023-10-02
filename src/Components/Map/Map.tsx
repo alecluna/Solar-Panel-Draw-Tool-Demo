@@ -14,6 +14,7 @@ import {
   Polygon,
   useJsApiLoader,
   Libraries,
+  GoogleMapProps,
 } from "@react-google-maps/api";
 import ErrorDialog from "../Dialogs/ErrorDialog";
 
@@ -23,13 +24,13 @@ const Map: React.FC<MapPropTypes> = ({
   setErrorDialogOpen,
   onUpdateSquareFootage,
 }) => {
-  const mapRef = useRef();
+  const mapRef = useRef<GoogleMapProps>();
   const polygonRefs = useRef<PolygonType[]>([]);
   const activePolygonIndex = useRef<number | undefined>();
   const autocompleteRef = useRef<unknown>();
   const drawingManagerRef = useRef<DrawingManager>();
 
-  const [map, setMap] = useState(null);
+  const [, setMap] = useState(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [polygons, setPolygons] = useState<LatLng[][]>([
     [
@@ -105,7 +106,7 @@ const Map: React.FC<MapPropTypes> = ({
   };
 
   const onLoadMap = useCallback(
-    (map) => {
+    (map: GoogleMapProps) => {
       console.log("map: ", map);
       mapRef.current = map;
 

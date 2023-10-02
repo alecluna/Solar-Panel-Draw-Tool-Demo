@@ -3,9 +3,10 @@
  * Passing props down from "LoanInfo.js" parent component
  */
 import { Pie, Line } from "react-chartjs-2";
-import { Chart, registerables } from "chart.js";
+import { Chart, registerables, Tooltip } from "chart.js";
+import { GraphProps, LineChartData } from "./types";
 
-Chart.register(...registerables);
+Chart.register({ Tooltip }, ...registerables);
 
 const optionsCircle = {
   responsive: true,
@@ -22,95 +23,50 @@ const optionsCircle = {
   },
 };
 
-const optionsLine = {
-  responsive: true,
-  maintainAspectRatio: false,
-  scales: {
-    x: {
-      scaleLabel: {
-        display: true,
-        labelString: "Given annual increase of 5.5% to avg. utility bill",
-        fontColor: "#787878",
-        fontSize: 9,
-      },
-      ticks: {
-        maxRotation: 90,
-        minRotation: 90,
-      },
-    },
-    y: {
-      ticks: {
-        max: 1000,
-        min: 0,
-        stepSize: 100,
-        callback: (value) => {
-          return "$" + value;
-        },
-      },
-    },
-  },
-  tooltips: {
-    enabled: true,
-    mode: "single",
-    callbacks: {
-      label: (tooltipItems) => {
-        return "$" + Math.round(tooltipItems.yLabel);
-      },
-    },
-  },
-  title: {
-    display: true,
-    text: "Avg. Monthly Bill w/out Solar vs. Monthly Loan Payment ",
-  },
-};
-
 //this function is hacky, using toFixed() to persist a 2 decimal value for each iteration
-const calculateYearlyBill = (averagePowerBill, saved) => {
-  const anualUtilBill = [];
+const calculateYearlyBill = (
+  averagePowerBill: number,
+  saved: number
+): number[] => {
+  console.log("saved: ", saved);
+  const anualUtilBill: number[] = [];
   const totalYearsSolar = 20;
   let curentPowerBillTrend = 0;
-  let floatingPointHack = 0;
-  let totalAverage = parseInt(averagePowerBill);
 
   // each "year", we add 5.5% to the total bill to adjust for
   // rises in utility/power costs
   for (let i = 0; i <= totalYearsSolar; i++) {
-    curentPowerBillTrend = totalAverage * (0.055).toFixed(2);
-    totalAverage = totalAverage + parseFloat(curentPowerBillTrend);
+    curentPowerBillTrend = averagePowerBill * Number((0.055).toFixed(2));
+    averagePowerBill = averagePowerBill + curentPowerBillTrend;
 
-    floatingPointHack = totalAverage.toFixed(2);
-    const moneySavedthisYear = Math.abs(floatingPointHack - parseInt(saved));
+    const roundedAvg = Math.round(averagePowerBill * 1e2) / 1e2; // round two decimals
+    const moneySavedthisYear = Math.abs(roundedAvg - saved);
     anualUtilBill.push(moneySavedthisYear);
   }
   return anualUtilBill;
 };
 
-const labelYears = () => {
-  const totalYearsSolar = 20;
-  let count = 0;
-  let currentYear = new Date().getFullYear(),
-    years = [];
+const labelYears = (): number[] => {
+  const totalYearsWithSolar = 20;
+  const thisYear = new Date().getFullYear();
 
-  while (count <= totalYearsSolar) {
-    years.push(currentYear++);
-    count++;
-  }
-  return years;
+  return Array.from({ length: totalYearsWithSolar }).reduce(
+    (acc: number[], _, index: number) => {
+      const curYear = thisYear + index;
+      acc.push(curYear);
+      return acc;
+    },
+    []
+  );
 };
 
-const generateSolarCost = (yearlyLoanCost) => {
-  const loanCostArray = [];
-  for (let i = 0; i <= 20; i++) {
-    loanCostArray.push(yearlyLoanCost);
-  }
-
-  return loanCostArray;
-};
+const buildLoanCostArray = (yearlyLoanCost: number): number[] =>
+  Array(20).fill(yearlyLoanCost);
 
 const lineChartData = (
   dataWithoutSolar: number[],
-  dataWithSolar: unknown[]
-) => {
+  dataWithSolar: number[]
+): LineChartData => {
   return {
     labels: labelYears(),
     datasets: [
@@ -136,7 +92,8 @@ const lineChartData = (
   };
 };
 
-const data = (fromUtility, offSetPowerbillPrice) => {
+const data = (fromUtility: number, offSetPowerbillPrice: number) => {
+  console.log("fromUtility", fromUtility, offSetPowerbillPrice);
   return {
     labels: ["From Utility", "From Solar"],
     datasets: [
@@ -149,39 +106,30 @@ const data = (fromUtility, offSetPowerbillPrice) => {
     text: "45%",
   };
 };
-interface GraphProps {
-  graphType: string;
-  total: number;
-  moneySaved: number;
-  averagePowerBill: number;
-  yearlyLoanCost: number;
-  offSetPowerbillPrice: number;
-}
 
 const Graph: React.FC<GraphProps> = ({
   graphType,
-  total,
-  moneySaved,
   averagePowerBill,
   yearlyLoanCost,
   offSetPowerbillPrice,
 }) => {
-  const fromUtility = (1 - parseFloat(offSetPowerbillPrice)).toFixed(4);
-  const dataWithoutSolar = calculateYearlyBill(averagePowerBill, 0);
-  const dataWithSolar = generateSolarCost(yearlyLoanCost);
+  const fromUtility = (1 - Number(offSetPowerbillPrice)).toFixed(4);
+
+  const dataWithoutSolar: number[] = calculateYearlyBill(averagePowerBill, 0);
+  const dataWithSolar: number[] = buildLoanCostArray(yearlyLoanCost);
 
   return (
-    <div style={{ height: "400px" }}>
+    <div>
       {graphType === "Pie" ? (
         <Pie
-          data={data(fromUtility, parseFloat(offSetPowerbillPrice).toFixed(4))}
+          data={data(
+            Number(fromUtility),
+            Number(offSetPowerbillPrice.toFixed(4))
+          )}
           options={optionsCircle}
         />
       ) : (
-        <Line
-          data={lineChartData(dataWithoutSolar, dataWithSolar)}
-          // options={optionsLine}
-        />
+        <Line data={lineChartData(dataWithoutSolar, dataWithSolar)} />
       )}
     </div>
   );

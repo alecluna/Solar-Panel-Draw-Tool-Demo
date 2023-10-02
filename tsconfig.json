@@ -22,13 +22,9 @@
     "baseUrl": "./src", // Set this to the path of your source code directory
     "paths": {
       "@/*": ["*"] // Alias for your source directory
-    }
+    },
+    "types": ["vite/client"]
   },
-  "include": ["src", "src/*"],
-  "exclude": [
-    "node_modules",
-    "**/src/Components/Graphs",
-    "**/src/Components/Stateless/LoanInfo.tsx",
-    "**/src/Components/Stateless/PopUpValidatorDialog.tsx"
-  ]
+  // "include": ["src/**/*.tsx", "src/declaration.d.ts"],
+  "exclude": ["node_modules", "src/Components/Dialogs/PopUpValidatorDialog.tsx"]
 }

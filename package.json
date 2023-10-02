@@ -11,9 +11,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@material-ui/core": "^4.12.4",
-    "@material-ui/icons": "^4.11.3",
-    "@material-ui/types": "^5.1.0",
     "@react-google-maps/api": "^2.19.2",
     "axios": "^1.4.0",
     "chart.js": "^4.3.3",
@@ -22,8 +19,6 @@
     "react-chartjs-2": "^5.2.0",
     "react-countup": "^6.4.2",
     "react-dom": "^18.2.0",
-    "react-google-maps": "^9.4.5",
-    "styled-components": "^6.0.7",
     "yup": "^1.2.0"
   },
   "devDependencies": {
