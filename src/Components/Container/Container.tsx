@@ -8,7 +8,7 @@ import { URLString, UpdateAveragePowerBill, ContainerProps } from "./types";
 import LoanContainer from "../Graphs/Loan/LoanContainer";
 
 const Container: React.FC<ContainerProps> = ({ showMapBox, setShowMapBox }) => {
-  const [openLoanInfo, setOpenLoanInfo] = useState<boolean>(true);
+  const [openLoanInfo, setOpenLoanInfo] = useState<boolean>(false);
   const [lat, setLat] = useState<number>(0);
   const [lng, setLng] = useState<number>(0);
   const [squareFootage, setSquareFootage] = useState<number | null>(null);
