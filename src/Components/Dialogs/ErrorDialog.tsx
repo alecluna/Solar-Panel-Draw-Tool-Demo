@@ -23,13 +23,14 @@ const ErrorDialog: React.FC<ErrorDialogProps> = ({
                   width="24"
                   height="24"
                   viewBox="0 0 24 24"
+                  className="cursor-pointer"
                   onClick={handleClose}
                 >
                   <path d="M19.78 4.22a.75.75 0 0 0-1.06 0L12 10.94 5.28 4.22a.75.75 0 0 0-1.06 1.06L10.94 12l-6.72 6.72a.75.75 0 0 0 1.06 1.06L12 13.06l6.72 6.72a.75.75 0 0 0 1.06-1.06L13.06 12l6.72-6.72a.75.75 0 0 0 0-1.06z" />
                 </svg>
               </div>
-              {title}
-              {message}
+              <p className="text-xl antialiased text-slate-800">{title}</p>
+              <p className="text-md antialiased text-slate-800">{message}</p>
             </div>
           </div>
         </div>

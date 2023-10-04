@@ -15,9 +15,15 @@ const Home: React.FC<SubmitAddressInfoProps> = ({
         updateLocation={updateLocation}
         isLoading={isLoading}
       />
-      <p className="antialiased	text-lg text-slate-800 pt-8">
+      <p className="antialiased	text-sm text-slate-600 pt-8">
         Note: Since this is a demo, no info is being stored, showing this off
         because I think it is cool.
+      </p>
+
+      <p className="antialiased	text-sm text-slate-600 pt-8">
+        Data based on fixed interest rate of 4.15% and a loan term of 20 years.
+        Initial cost of system also factors in 30% Federal Tax Credit. (Most of
+        this data is from 2019 when product was built)
       </p>
     </div>
   </div>

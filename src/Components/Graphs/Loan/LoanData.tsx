@@ -132,6 +132,11 @@ const LoanData: React.FC<LoanDataProps> = ({
             offSetPowerbillPrice={offSetPowerbillPrice}
           />
         </LoanCard>
+        <p className="antialiased	text-xs text-slate-500 p-1">
+          Data based on fixed interest rate of 4.15% and a loan term of 20
+          years. Initial cost of system also factors in 30% Federal Tax Credit.
+          (Most of this data is from 2019 when product was built)
+        </p>
       </div>
     </>
   );
