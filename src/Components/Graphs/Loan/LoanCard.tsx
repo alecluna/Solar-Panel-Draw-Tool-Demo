@@ -6,8 +6,8 @@ interface LoanCardProps {
 
 const LoanCard: React.FC<LoanCardProps> = ({ children }) => {
   return (
-    <div className="h-125px shadow-md flex-none w-full md:w-1/2 min-w-0 p-2">
-      {children}
+    <div className="flex-none w-full md:w-1/2 min-w-0 p-2">
+      <div className="h-full shadow-md">{children}</div>
     </div>
   );
 };

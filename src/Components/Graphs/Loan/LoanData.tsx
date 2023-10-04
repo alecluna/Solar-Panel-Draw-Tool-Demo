@@ -17,28 +17,20 @@ const LoanData: React.FC<LoanDataProps> = ({
 }) => {
   return (
     <>
-      <div className="m-5">
+      <div className="m-3">
         <h2 className="text-3xl text-slate-800">
           You have selected:{"  "}
-          {/* <strong>
+          <strong>
             <CountUp
               useEasing={true}
               end={narrowSquareFootagType()}
               duration={5}
               suffix=" sq. feet"
             />
-          </strong> */}
-          <strong>
-            <CountUp
-              useEasing={true}
-              end={640}
-              duration={10}
-              suffix=" sq. feet"
-            />
           </strong>
         </h2>
       </div>
-      <div className="flex flex-wrap p-5">
+      <div className="flex flex-wrap p-2">
         <LoanCard>
           <div className="flex flex-col">
             <p className="text-2xl antialiased text-slate-700 w-1/2 p-2">
