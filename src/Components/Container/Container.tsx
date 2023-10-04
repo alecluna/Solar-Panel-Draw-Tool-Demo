@@ -8,17 +8,17 @@ import { URLString, UpdateAveragePowerBill, ContainerProps } from "./types";
 import LoanContainer from "../Graphs/Loan/LoanContainer";
 
 const Container: React.FC<ContainerProps> = ({ showMapBox, setShowMapBox }) => {
-  const [openLoanInfo, setOpenLoanInfo] = useState<boolean>(true);
+  const [openLoanInfo, setOpenLoanInfo] = useState<boolean>(false);
   const [lat, setLat] = useState<number>(0);
   const [lng, setLng] = useState<number>(0);
   const [squareFootage, setSquareFootage] = useState<number | null>(null);
-  const [loanCost, setLoanCost] = useState(0);
+  const [loanCost, setLoanCost] = useState<number>(0);
   const [numberOfPanels, setNumberOfPanels] = useState<number>(0);
   const [sysSizeKiloWatts, setSysSizeKiloWatts] = useState<number>(0);
   const [initialCost, setInitialCost] = useState(0);
   const [averagePowerBill, setAveragePowerBill] = useState<number>(0);
   const [offSetPowerbillPrice, setOffSetPowerbillPrice] = useState(0);
-  const [errorDialogOpen, setErrorDialogOpen] = useState<boolean>(true);
+  const [errorDialogOpen, setErrorDialogOpen] = useState<boolean>(false);
   const [isLoading, setLoading] = useState<boolean>(false);
 
   const toggleOpenLoanInfo = (): void => {
