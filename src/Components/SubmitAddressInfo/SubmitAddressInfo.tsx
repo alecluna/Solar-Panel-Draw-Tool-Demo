@@ -95,8 +95,9 @@ const SubmitAddressInfo: React.FC<SubmitAddressInfoProps> = ({
       </div>
 
       <FormikProvider value={formik}>
-        <Form className="w-full">
+        <Form>
           <Field
+            style={{ maxWidth: 400, width: "100%" }}
             className="block flex-1 border-0 bg-transparent py-1.5 pl-1 pt-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-lg sm:leading-6"
             placeholder="Avg. Monthly Power Bill"
             type="text"
@@ -104,18 +105,21 @@ const SubmitAddressInfo: React.FC<SubmitAddressInfoProps> = ({
           />
 
           <Field
+            style={{ maxWidth: 400, width: "100%" }}
             className="block flex-1 border-0 bg-transparent py-1.5 pl-1 pt-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-lg sm:leading-6"
             placeholder="Address"
             {...formik.getFieldProps("address")}
           />
 
           <Field
+            style={{ maxWidth: 400, width: "100%" }}
             className="block flex-1 border-0 bg-transparent py-1.5 pl-1 pt-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-lg sm:leading-6"
             placeholder="City"
             {...formik.getFieldProps("city")}
           />
 
           <Field
+            style={{ maxWidth: 400, width: "100%" }}
             className="block flex-1 border-0 bg-transparent py-1.5 pl-1 pt-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-lg sm:leading-6"
             placeholder="State"
             {...formik.getFieldProps("state")}
