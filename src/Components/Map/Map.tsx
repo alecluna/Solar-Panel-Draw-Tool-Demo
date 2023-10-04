@@ -27,11 +27,12 @@ const Map: React.FC<MapPropTypes> = ({
   const mapRef = useRef<GoogleMapProps>();
   const polygonRefs = useRef<PolygonType[]>([]);
   const activePolygonIndex = useRef<number | undefined>();
-  const autocompleteRef = useRef<unknown>();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const autocompleteRef = useRef<any>();
   const drawingManagerRef = useRef<DrawingManager>();
 
-  const [, setMap] = useState(null);
-  const [isDrawing, setIsDrawing] = useState(false);
+  const [, setMap] = useState<GoogleMapProps | null>(null);
+  const [isDrawing, setIsDrawing] = useState<boolean>(false);
   const [polygons, setPolygons] = useState<LatLng[][]>([
     [
       { lat: undefined, lng: undefined },
@@ -106,14 +107,15 @@ const Map: React.FC<MapPropTypes> = ({
   };
 
   const onLoadMap = useCallback(
-    (map: GoogleMapProps) => {
-      console.log("map: ", map);
+    (map: GoogleMapProps): void => {
       mapRef.current = map;
+      setMap(map);
 
+      console.log("mapref current: ", mapRef);
       if (center) {
+        // if (window.google.maps.LatLngBounds !== undefined)
         const bounds = new window.google.maps.LatLngBounds(center);
-        map.fitBounds(bounds);
-        setMap(map);
+        mapRef.current.fitBounds(bounds);
       }
     },
 
@@ -139,7 +141,6 @@ const Map: React.FC<MapPropTypes> = ({
   };
 
   const onLoadAutocomplete = useCallback((autocomplete: string): void => {
-    console.log(autocomplete);
     autocompleteRef.current = autocomplete;
   }, []);
 
@@ -158,7 +159,6 @@ const Map: React.FC<MapPropTypes> = ({
     mapRef?.current?.fitBounds(bounds);
   };
 
-  // Q what does this function do?
   const onOverlayComplete = (overlayEvent: OverlayEvent) => {
     console.log("overlayEvent: ", overlayEvent);
     drawingManagerRef?.current?.setDrawingMode(null);
@@ -169,13 +169,20 @@ const Map: React.FC<MapPropTypes> = ({
     // }
 
     if (overlayEvent.type === window.google.maps.drawing.OverlayType.POLYGON) {
-      const newPolygon = overlayEvent?.overlay
-        .getPath()
-        .getArray()
-        .map((latLng: LatLng) => {
+      const newPolygon = overlayEvent?.overlay.getPath().getArray();
+
+      /**
+       * TODO:
+       * check this works
+       */
+      if (newPolygon?.length) {
+        newPolygon.map((latLng) => {
           console.log("latLng: ", latLng);
-          return { lat: latLng.lat(), lng: latLng.lng() };
+          const { lat, lng } = latLng;
+          if (lat !== undefined && lng !== undefined)
+            return { lat: lat, lng: lng };
         });
+      }
 
       const area =
         window.google.maps.geometry.spherical.computeArea(newPolygon);
@@ -211,15 +218,14 @@ const Map: React.FC<MapPropTypes> = ({
     }
   };
 
-  const onUnmount = useCallback((map) => {
+  const onUnmount = useCallback(() => {
     setMap(null);
   }, []);
 
   if (loadError) {
     return (
       <ErrorDialog
-        open={errorDialogOpen}
-        onClose={() => setErrorDialogOpen(!errorDialogOpen)}
+        handleClose={() => setErrorDialogOpen(!errorDialogOpen)}
         title="Error with request"
         message="Whoops, something went wrong with your request, please try again"
       />
@@ -258,7 +264,7 @@ const Map: React.FC<MapPropTypes> = ({
           );
         })}
 
-        <div className="absolute top-20 w-full">
+        <div className="absolute top-15 w-full">
           <div className="flex flex-wrap flex-col items-start m-12">
             <button
               className="flex-shrink-0 flex-grow-0 w-190 transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-100 duration-300 bg-blue-500 hover:bg-blue-900 text-white font-bold py-2 px-2 border border-blue-700 rounded mb-2"

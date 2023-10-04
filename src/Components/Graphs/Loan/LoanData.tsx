@@ -1,7 +1,7 @@
 import { LoanDataProps } from "../types";
 import CountUp from "react-countup";
 import Graph from "../Graph";
-
+import LoanCard from "./LoanCard";
 import arrow from "../../../assets/right-arrow.svg";
 
 const LoanData: React.FC<LoanDataProps> = ({
@@ -17,63 +17,46 @@ const LoanData: React.FC<LoanDataProps> = ({
 }) => {
   return (
     <>
-      <div className="p-5">
+      <div className="m-5">
         <h2 className="text-3xl text-slate-800">
           You have selected:{"  "}
-          <strong>
+          {/* <strong>
             <CountUp
               useEasing={true}
               end={narrowSquareFootagType()}
               duration={5}
               suffix=" sq. feet"
             />
+          </strong> */}
+          <strong>
+            <CountUp
+              useEasing={true}
+              end={640}
+              duration={10}
+              suffix=" sq. feet"
+            />
           </strong>
         </h2>
       </div>
-      <div className="flex flex-col flex-wrap justify-center p-5">
-        <div className=" max-w-30em w-full h-125 shadow-md">
-          <p className="text-4xl text-gray-900">
-            <CountUp prefix="$" end={calculateSavingsOverLife()} duration={4} />
-          </p>
-          <p className="text-2xl text-gray-900">
-            Estimated savings over 25 years, when comparing your avg. monthly
-            power bill of <strong>${averagePowerBill}</strong> to{" "}
-            <strong>${loanTerm}</strong>:{" "}
-          </p>
-        </div>
-
-        <div className=" max-w-30em w-full h-125 shadow-md">
-          <div style={{ width: "45%" }}>
-            <p className="text-2xl text-gray-900">
+      <div className="flex flex-wrap p-5">
+        <LoanCard>
+          <div className="flex flex-col">
+            <p className="text-2xl antialiased text-slate-700 w-1/2 p-2">
               <CountUp
-                useEasing={true}
-                end={loanTerm}
-                duration={4}
                 prefix="$"
+                end={calculateSavingsOverLife()}
+                duration={4}
               />
             </p>
-            <p>Estimated New Monthly Loan Payment </p>
-          </div>
-
-          <div>
-            <img className="w-10 h-10" src={arrow} alt="arrow" />
-          </div>
-          <div style={{ width: "30%" }}>
-            {" "}
-            <p className="text-2xl text-gray-900">
-              <CountUp
-                useEasing={true}
-                end={averagePowerBill - loanTerm}
-                duration={4}
-                prefix="$"
-              />
+            <p className="text-md antialiased text-slate-700 p-2">
+              Estimated savings over 25 years, when comparing your avg. monthly
+              power bill of <strong>${averagePowerBill}</strong> to{" "}
+              <strong>${loanTerm}</strong>:{" "}
             </p>
-            <p>Monthly Savings </p>
           </div>
-        </div>
-
-        <div className=" max-w-30em w-full h-125 shadow-md">
-          <p className="text-2xl text-gray-900">
+        </LoanCard>
+        <LoanCard>
+          <p className="text-2xl antialiased text-slate-700 w-1/2 p-2">
             <CountUp
               useEasing={true}
               end={sysSizeKiloWatts}
@@ -81,14 +64,48 @@ const LoanData: React.FC<LoanDataProps> = ({
               suffix=" kW"
             />
           </p>
-          <p>
+          <p className=" p-2">
             Total System Size in kW for{" "}
             <strong>{narrowSquareFootagType()}</strong> sqft roof:
           </p>
-        </div>
+        </LoanCard>
 
-        <div className=" max-w-30em w-full h-125 shadow-md">
-          <p className="text-2xl text-gray-900">
+        <LoanCard>
+          <div className="flex">
+            <div className="flex-none w-1/3 min-w-0 p-2">
+              <p>
+                <CountUp
+                  useEasing={true}
+                  end={loanTerm}
+                  duration={4}
+                  prefix="$"
+                />
+              </p>
+              <p className="text-md antialiased text-slate-700">
+                Est. New Monthly Loan Payment{" "}
+              </p>
+            </div>
+            <div className="flex-none flex justify-center items-center w-1/3 min-w-0 p-2">
+              <img className="w-10 h-10" src={arrow} alt="arrow" />
+            </div>
+            <div className="flex-none w-1/3 min-w-0 p-2">
+              <p>
+                <CountUp
+                  useEasing={true}
+                  end={averagePowerBill - loanTerm}
+                  duration={4}
+                  prefix="$"
+                />
+              </p>
+              <p className="text-md antialiased text-slate-700">
+                Monthly Savings{" "}
+              </p>
+            </div>
+          </div>
+        </LoanCard>
+
+        <LoanCard>
+          <p className="w-1/2 text-2xl text-gray-900 p-2">
             <CountUp
               useEasing={true}
               end={numberOfPanels}
@@ -96,13 +113,13 @@ const LoanData: React.FC<LoanDataProps> = ({
               suffix=" panels"
             />
           </p>
-          <p className="text-2xl text-gray-900">
+          <p className="text-md antialiased text-slate-700 p-2">
             Approximate # of Panels needed to offset Avg. Yearly Power Bill of{" "}
             <strong>${averagePowerBill * 12}</strong>{" "}
           </p>
-        </div>
+        </LoanCard>
 
-        <div className=" max-w-30em w-full h-125 shadow-md">
+        <LoanCard>
           <Graph
             graphType="Pie"
             total={initialCost}
@@ -111,9 +128,9 @@ const LoanData: React.FC<LoanDataProps> = ({
             offSetPowerbillPrice={offSetPowerbillPrice}
             yearlyLoanCost={loanTerm}
           />
-        </div>
+        </LoanCard>
 
-        <div className=" max-w-30em w-full h-125 shadow-md">
+        <LoanCard>
           <Graph
             graphType="Line"
             total={initialCost}
@@ -122,7 +139,7 @@ const LoanData: React.FC<LoanDataProps> = ({
             yearlyLoanCost={loanTerm}
             offSetPowerbillPrice={offSetPowerbillPrice}
           />
-        </div>
+        </LoanCard>
       </div>
     </>
   );
