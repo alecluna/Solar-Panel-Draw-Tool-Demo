@@ -3,18 +3,20 @@ import {
   LatLng,
   MapPropTypes,
   PolygonType,
-  OverlayEvent,
+  // OverlayEvent,
   DrawingManager,
+  GoogleMapInterface,
+  ContainerStyle,
+  LatLngBounds,
 } from "./types";
 
 import {
   Autocomplete,
   DrawingManagerF,
-  GoogleMap,
   Polygon,
+  GoogleMap,
   useJsApiLoader,
   Libraries,
-  GoogleMapProps,
 } from "@react-google-maps/api";
 import ErrorDialog from "../Dialogs/ErrorDialog";
 
@@ -24,37 +26,39 @@ const Map: React.FC<MapPropTypes> = ({
   setErrorDialogOpen,
   onUpdateSquareFootage,
 }) => {
-  const mapRef = useRef<GoogleMapProps>();
+  const mapRef = useRef<GoogleMapInterface>();
   const polygonRefs = useRef<PolygonType[]>([]);
   const activePolygonIndex = useRef<number | undefined>();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const autocompleteRef = useRef<any>();
   const drawingManagerRef = useRef<DrawingManager>();
 
-  const [, setMap] = useState<GoogleMapProps | null>(null);
+  const [, setMap] = useState<GoogleMapInterface | null>(null);
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
   const [polygons, setPolygons] = useState<LatLng[][]>([
     [
-      { lat: undefined, lng: undefined },
-      { lat: undefined, lng: undefined },
-      { lat: undefined, lng: undefined },
-      { lat: undefined, lng: undefined },
+      { lat: 0, lng: 0 },
+      { lat: 0, lng: 0 },
+      { lat: 0, lng: 0 },
+      { lat: 0, lng: 0 },
     ],
     [
-      { lat: undefined, lng: undefined },
-      { lat: undefined, lng: undefined },
-      { lat: undefined, lng: undefined },
-      { lat: undefined, lng: undefined },
-      { lat: undefined, lng: undefined },
+      { lat: 0, lng: 0 },
+      { lat: 0, lng: 0 },
+      { lat: 0, lng: 0 },
+      { lat: 0, lng: 0 },
+      { lat: 0, lng: 0 },
     ],
   ]);
 
-  const defaultCenter: LatLng = {
+  const defaultCenter: LatLngBounds = {
     lat: latitude,
     lng: longitude,
   };
 
-  const [center, setCenter] = useState<LatLng>(defaultCenter);
+  const [center, setCenter] = useState<LatLngBounds | LatLng | null>(
+    defaultCenter
+  );
   const [libraries] = useState<Libraries>(["places", "drawing", "geometry"]);
 
   const { isLoaded, loadError } = useJsApiLoader({
@@ -64,7 +68,7 @@ const Map: React.FC<MapPropTypes> = ({
     id: "script-loader",
   });
 
-  const containerStyle = {
+  const containerStyle: ContainerStyle = {
     width: "100vw",
     height: "calc(100vh - 64px)",
   };
@@ -107,29 +111,28 @@ const Map: React.FC<MapPropTypes> = ({
   };
 
   const onLoadMap = useCallback(
-    (map: GoogleMapProps): void => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (map: any): void => {
       mapRef.current = map;
       setMap(map);
 
-      console.log("mapref current: ", mapRef);
       if (center) {
-        // if (window.google.maps.LatLngBounds !== undefined)
-        const bounds = new window.google.maps.LatLngBounds(center);
-        mapRef.current.fitBounds(bounds);
+        // TODO: fix this issue with LatLngBounds
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const bounds: any = new window.google.maps.LatLngBounds(center);
+        console.log("bounds: ", bounds);
+        mapRef?.current?.fitBounds(bounds);
       }
     },
-
     [center]
   );
 
-  const onLoadDrawingManager = useCallback(
-    (drawingManager: DrawingManager): void => {
-      drawingManagerRef.current = drawingManager;
-    },
-    []
-  );
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onLoadDrawingManager = useCallback((drawingManager: any): void => {
+    drawingManagerRef.current = drawingManager;
+  }, []);
 
-  const onLoadPolygon: (polygon: PolygonType, index: number) => void = (
+  const onLoadPolygon: (polygon: PolygonType | any, index: number) => void = (
     polygon: PolygonType,
     index: number
   ) => {
@@ -140,7 +143,8 @@ const Map: React.FC<MapPropTypes> = ({
     activePolygonIndex.current = index;
   };
 
-  const onLoadAutocomplete = useCallback((autocomplete: string): void => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onLoadAutocomplete = useCallback((autocomplete: string | any): void => {
     autocompleteRef.current = autocomplete;
   }, []);
 
@@ -149,7 +153,8 @@ const Map: React.FC<MapPropTypes> = ({
 
     const { geometry } = autocompleteRef.current.getPlace();
 
-    const bounds = new window.google.maps.LatLngBounds();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const bounds: any = new window.google.maps.LatLngBounds();
     if (geometry?.viewport) {
       bounds.union(geometry.viewport);
     } else {
@@ -159,7 +164,8 @@ const Map: React.FC<MapPropTypes> = ({
     mapRef?.current?.fitBounds(bounds);
   };
 
-  const onOverlayComplete = (overlayEvent: OverlayEvent) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onOverlayComplete = (overlayEvent: any) => {
     console.log("overlayEvent: ", overlayEvent);
     drawingManagerRef?.current?.setDrawingMode(null);
 
@@ -176,7 +182,8 @@ const Map: React.FC<MapPropTypes> = ({
        * check this works
        */
       if (newPolygon?.length) {
-        newPolygon.map((latLng) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        newPolygon.map((latLng: any) => {
           console.log("latLng: ", latLng);
           const { lat, lng } = latLng;
           if (lat !== undefined && lng !== undefined)
@@ -203,13 +210,17 @@ const Map: React.FC<MapPropTypes> = ({
     setIsDrawing(false);
   };
 
-  const onEditPolygon = (index: number) => {
-    const polygonRef = polygonRefs.current[index];
-    if (polygonRef) {
-      const coordinates = polygonRef
-        .getPath()
+  const onEditPolygon = (index: number): void => {
+    // TODO fix this issue with getPath() not working with type
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const polygonRef: any = polygonRefs.current[index];
+    const path = polygonRef?.getPath();
+
+    if (path) {
+      const coordinates = path
         .getArray()
-        .map((latLng) => ({ lat: latLng.lat(), lng: latLng.lng() }));
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .map((latLng: any) => ({ lat: latLng.lat(), lng: latLng.lng() }));
 
       const allPolygons = [...polygons];
       // console.log("allPolygons: ", allPolygons);
